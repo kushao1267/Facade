@@ -5,5 +5,5 @@ import (
 )
 
 func main()  {
-	api.ApiServer("127.0.0.1:8080")
+	api.ApiServer("0.0.0.0:8080")
 }

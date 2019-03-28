@@ -1,16 +1,14 @@
-FROM alpine:latest
+FROM golang:1.12.1-stretch
 
 MAINTAINER jianliu001922@gmail.com
 
-ENV APP_SOURCE_CODE_PATH /opt/app
 ENV APP_LOG_PATH /data/app/log/
 ENV APP_NAME facade_server
 
-WORKDIR ${APP_SOURCE_CODE_PATH}
+WORKDIR /go/
 VOLUME ${APP_LOG_PATH}
 
 RUN echo "PS1=$" >> ~/.bashrc
+COPY . .
 
-ADD ${APP_NAME} .
-
-CMD ${APP_NAME}
+CMD ./${APP_NAME}
