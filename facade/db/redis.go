@@ -1,35 +1,40 @@
 package db
 
 import (
+	"time"
 	"github.com/go-redis/redis"
 	"github.com/kushao1267/facade/facade/config"
+	"github.com/kushao1267/facade/facade/utils"
+	"golang.org/x/tools/go/ssa/interp/testdata/src/fmt"
 )
 
+var LinkPreviewService *LinkPreview
+var redisdb *redis.Client
+
+// See use: https://github.com/go-redis/redis/blob/master/example_test.go
 func init() {
-	var LinkPreviewService LinkPreview
-	if r, ok := NewRedis(config.AllConf.Redis["master"]); ok != nil {
-		panic("初始化redis失败!")
-	} else {
-		LinkPreviewService.Redis = r
-	}
+	LinkPreviewService.Init()
+
+	redisdb = NewRedis(config.AllConf.Redis["master"])
 }
 
-func NewRedis(c config.Redis) (*redis.Client, error) {
-	rdb := redis.NewClient(&redis.Options{
+func NewRedis(c config.Redis) *redis.Client{
+	db := redis.NewClient(&redis.Options{
 		Addr:     c.Addr,
 		Password: c.Password,
 		DB:       c.DB, // use default DB
+		PoolSize:     10,
+		PoolTimeout:  30 * time.Second,
 	})
 
-	if err := rdb.Ping().Err(); err != nil {
-		return nil, err
+	if err := db.Ping().Err(); err != nil {
+		panic("初始化redis失败!")
 	}
-	return rdb, nil
+	return db
 }
 
 // LinkPreview: 链接预览缓存服务
 type LinkPreview struct {
-	Redis *redis.Client
 	// store field
 	Url         string
 	Title       string
@@ -50,18 +55,47 @@ func (l *LinkPreview) Init() {
 	l.ImageWidth = "image_width"
 }
 
-func (l LinkPreview) GetKey() {
-
+func (l LinkPreview) GetKey(url string) string{
+	hash := utils.GetMD5Hash(url)
+	return fmt.Sprintf("link_preview_cache:%s", hash)
 }
-func (l LinkPreview) GetValues() {
 
-}
-func (l LinkPreview) SetValues() {
+func (l LinkPreview) GetValues(url string, fields ...string) []string{
+	key := l.GetKey(url)
+	s := make([]string, len(fields))
 
-}
-func (l LinkPreview) Delete() {
+	val, err :=redisdb.HMGet(key, fields...).Result()
 
+	if err != nil {
+		panic(err)
+	}else if  err == redis.Nil { // key does not exists
+		for i, _ := range fields {
+			s[i] = ""
+		}
+	}else {
+		for i, _ := range fields {
+			s[i] = val[i].(string)
+		}
+	}
+	return s
 }
-func (l LinkPreview) BatchDelete() {
 
+func (l LinkPreview) SetValues(url string, fields map[string]interface{}) {
+	key := l.GetKey(url)
+
+	if err := redisdb.HMSet(key, fields);err != nil {
+		panic(err)
+	}
+
+	if err1 :=redisdb.Expire(key, config.AllConf.Expire).Err();err1 !=nil{
+		panic(err1)
+	}
 }
+
+func (l LinkPreview) Delete(url string) {
+	key := l.GetKey(url)
+	if err := redisdb.Del(key).Err();err!=nil{
+		panic(err)
+	}
+}
+

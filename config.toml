@@ -7,3 +7,5 @@ title = "全局配置"
     db = 1
     poolSize = 10
     poolTimeout = 30
+
+expire=2s
