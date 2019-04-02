@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/BurntSushi/toml"
+	"reflect"
 	"time"
 )
 
@@ -13,10 +14,17 @@ type Redis struct {
 	PoolTimeout int
 }
 
+type DefaultItem struct {
+	Title string
+	Image string
+	ForceDefault bool
+}
+
 type Config struct {
-	Title          string
-	Expire	time.Duration
-	Redis map[string]Redis `toml:"redis"`
+	Title     string
+	Expire    time.Duration
+	Redis     map[string]Redis `toml:"redis"`
+	ReturnMap map[string]DefaultItem
 }
 
 // AllConf 全局配置

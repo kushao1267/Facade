@@ -6,7 +6,7 @@ import (
 )
 
 //GetNowTimeStamp 获取时间戳
-func GetNowTimeStamp()int64{
+func GetNowTimeStamp() int64 {
 	return time.Now().UnixNano() / int64(time.Millisecond)
 }
 
