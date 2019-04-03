@@ -2,6 +2,7 @@ package utils
 
 import (
 	"net/url"
+	"regexp"
 )
 
 func GetComponent(s string) (*url.URL, error){
@@ -16,4 +17,10 @@ func GetHostName(s string) (string, error){
 		return "", err
 	}
 	return u.Host, nil
+}
+
+// CleanHtmlTags 简单地处理html标签
+func CleanHtmlTags(raw string) string{
+	cleaner := regexp.MustCompile("<.*?>")
+	return cleaner.ReplaceAllString(raw,"")
 }

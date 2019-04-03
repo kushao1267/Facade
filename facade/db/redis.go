@@ -2,10 +2,10 @@ package db
 
 import (
 	"time"
+	"fmt"
 	"github.com/go-redis/redis"
 	"github.com/kushao1267/facade/facade/config"
 	"github.com/kushao1267/facade/facade/utils"
-	"golang.org/x/tools/go/ssa/interp/testdata/src/fmt"
 )
 
 var LinkPreviewService *LinkPreview

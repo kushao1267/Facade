@@ -5,4 +5,6 @@ const (
 	APIFailCode    = 0
 	TestENV        = "test"
 	ReleaseENV     = "release"
+
+
 )

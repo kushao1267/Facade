@@ -6,14 +6,14 @@ import (
 )
 
 const (
-	title_field         = "title"
-	image_field         = "image"
+	title_field = "title"
+	image_field = "image"
 )
 
 type ReturnData struct {
 	// meta field
 	Error       error
-	Exception 	string
+	Exception   string
 	Url         string
 	Hostname    string
 	ShouldCache bool
@@ -22,36 +22,40 @@ type ReturnData struct {
 	Description string
 	Images      []string
 
-	Bestimage  *utils.Image
+	Bestimage *utils.Image
 }
 
-func NewReturnData(hostname, exception, title, description string, err error,images []string) *ReturnData{
+func NewReturnData(hostname, exception, title, description string, err error, images []string) *ReturnData {
 	r := &ReturnData{}
 	r.Error = err
 
-	if exception != ""{
+	if exception != "" {
 		r.ShouldCache = false
-	}else {
+	} else {
 		r.ShouldCache = true
 	}
 
-	if hasDefault(hostname){
+	if hasDefault(hostname) {
+		r.Exception = ""
+	}else {
 		r.Exception = exception
 	}
 
-	if len(description) > 125{
+	if len(description) > 125 {
 		r.Description = description[:125] + "..."
+	}else{
+		r.Description = description
 	}
 
-	if title != ""{
+	if title != "" {
 		r.Title = title
-	}else {
+	} else {
 		r.Title = getDefault(hostname, title_field)
 	}
 
-	if isForceDefault(hostname) || len(r.Images) == 0{
+	if isForceDefault(hostname) || len(r.Images) == 0 {
 		r.Images = append(r.Images, getDefault(hostname, image_field))
-	}else {
+	} else {
 		r.Images = images
 	}
 
@@ -60,25 +64,25 @@ func NewReturnData(hostname, exception, title, description string, err error,ima
 	return r
 }
 
-func hasDefault(hostname string) bool{
-	if _,ok := config.AllConf.ReturnMap[hostname]; ok {
+func hasDefault(hostname string) bool {
+	if _, ok := config.AllConf.ReturnMap[hostname]; ok {
 		return true
 	}
 	return false
 }
 
-func isForceDefault(hostname string) bool{
+func isForceDefault(hostname string) bool {
 	if val, ok := config.AllConf.ReturnMap[hostname]; ok {
 		return val.ForceDefault
 	}
 	return false
 }
 
-func getDefault(hostname ,field string) string{
+func getDefault(hostname, field string) string {
 	if val, ok := config.AllConf.ReturnMap[hostname]; ok {
-		if field == title_field{
+		if field == title_field {
 			return val.Title
-		}else if field == image_field{
+		} else if field == image_field {
 			return val.Image
 		}
 	}
@@ -90,5 +94,5 @@ func getDefault(hostname ,field string) string{
 type Handle interface {
 	Requests() //请求方法
 	Extract()  // 提取方法
-	Handle()   // 处理方法，是handle的出口
+	Handle()   // 处理方法
 }
