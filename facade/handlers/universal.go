@@ -91,16 +91,16 @@ func (e Extracted) Feed() string {
 	return ""
 }
 
-// DictExtractor :Extracts title, image and description from an HTML document.
-type DictExtractor struct {
+// Extractor :Extracts title, image and description from an HTML document.
+type Extractor struct {
 	urlTypes    []string
 	textTypes   []string
 	strictTypes bool
 	techniques  []techniques.Technique
 }
 
-func NewDictExtractor(techniques []techniques.Technique, strictTypes bool) DictExtractor {
-	d := DictExtractor{}
+func NewDictExtractor(techniques []techniques.Technique, strictTypes bool) Extractor {
+	d := Extractor{}
 
 	d.urlTypes = []string{"images", "urls", "feeds", "videos"}
 	d.textTypes = []string{"titles", "descriptions"}
@@ -117,12 +117,13 @@ func NewDictExtractor(techniques []techniques.Technique, strictTypes bool) DictE
 // and class name for the technique, for example::
 // extraction.techniques.FacebookOpengraphTags
 // HTML is a string representing an HTML document.
-func (d DictExtractor) runTechnique(technique techniques.Technique, html string) techniques.DirtyExtracted {
+func (d Extractor) runTechnique(technique techniques.Technique, html string) techniques.DirtyExtracted {
+	technique.SetExtractor(d)
 	return technique.Extract(html)
 }
 
 // cleanUpText Cleanup text values like titles or descriptions.
-func (d DictExtractor) cleanUpText(value, mark string) string {
+func (d Extractor) cleanUpText(value, mark string) string {
 	text := strings.TrimSpace(value)
 	if mark != "" {
 		text = mark + " " + text
@@ -134,7 +135,7 @@ func (d DictExtractor) cleanUpText(value, mark string) string {
 // If the value_url is already absolute, or we don't know the
 // source_url, then return the existing value. If the value_url is
 // relative, and we know the source_url, then try to rewrite it.
-func (d DictExtractor) cleanUpUrl(valueUrl, sourceUrl, mark string) string {
+func (d Extractor) cleanUpUrl(valueUrl, sourceUrl, mark string) string {
 	netloc, _ := utils.GetHostName(valueUrl)
 
 	var url string
@@ -160,7 +161,7 @@ func (d DictExtractor) cleanUpUrl(valueUrl, sourceUrl, mark string) string {
 // 3. filter out duplicate values
 // 4. marks the technique that produced the result
 // 5. returns only specified text_types and url_types depending on self.strict_types
-func (d DictExtractor) cleanUp(results techniques.DirtyExtracted, technique techniques.Technique, sourceUrl string) Extracted {
+func (d Extractor) cleanUp(results techniques.DirtyExtracted, technique techniques.Technique, sourceUrl string) Extracted {
 	var cleanedResults Extracted
 
 	var mark string
@@ -207,7 +208,7 @@ func (d DictExtractor) cleanUp(results techniques.DirtyExtracted, technique tech
 // `source_url` is optional, but allows for a certain level of
 // cleanup to be performed, such as converting relative URLs
 // into absolute URLs and such.
-func (d DictExtractor) Extract(html, sourceUrl string) Extracted {
+func (d Extractor) Extract(html, sourceUrl string) Extracted {
 	var extracted Extracted
 
 	for _, technique := range d.techniques {
@@ -235,27 +236,4 @@ func (d DictExtractor) Extract(html, sourceUrl string) Extracted {
 	}
 
 	return extracted
-}
-
-// Subclass of ``DictExtractor`` which wraps results in a
-// subclass of ``Extracted`` for greater control.
-type Extractor struct {
-	DictExtractor
-	ExtractedClass Extracted
-}
-
-// NewExtractor 使用...来实现类似默认值的效果
-func NewExtractor(techniques []techniques.Technique, strictTypes bool, extracted ...Extracted) *Extractor {
-	dictExtractor := NewDictExtractor(techniques, strictTypes)
-	if len(extracted) > 0 {
-		return &Extractor{
-			dictExtractor,
-			extracted[0],
-		}
-	}
-
-	return &Extractor{
-		dictExtractor,
-		Extracted{},
-	}
 }
