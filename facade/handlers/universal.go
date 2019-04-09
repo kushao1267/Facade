@@ -99,7 +99,7 @@ type Extractor struct {
 	techniques  []techniques.Technique
 }
 
-func NewDictExtractor(techniques []techniques.Technique, strictTypes bool) Extractor {
+func NewExtractor(techniques []techniques.Technique, strictTypes bool) Extractor {
 	d := Extractor{}
 
 	d.urlTypes = []string{"images", "urls", "feeds", "videos"}
@@ -114,8 +114,7 @@ func NewDictExtractor(techniques []techniques.Technique, strictTypes bool) Extra
 
 // Run a given technique against the HTML.
 // Technique is a string including the full module path
-// and class name for the technique, for example::
-// extraction.techniques.FacebookOpengraphTags
+// and class name for the technique,
 // HTML is a string representing an HTML document.
 func (d Extractor) runTechnique(technique techniques.Technique, html string) techniques.DirtyExtracted {
 	technique.SetExtractor(d)

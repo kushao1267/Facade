@@ -2,7 +2,7 @@ package techniques
 
 import "github.com/kushao1267/facade/facade/handlers"
 
-// Technique 必须实现Extract方法
+// Technique 必须实现的方法
 type Technique interface {
 	SetName(name string)
 	GetName() string
