@@ -3,15 +3,22 @@ package api
 import "github.com/gin-gonic/gin"
 import (
 	"net/http"
-	"strings"
-	"github.com/kushao1267/facade/facade/consts"
 	"os"
+	"strings"
+)
+
+const (
+	SuccessCode = 1
+	FailCode    = 0
+
+	TestENV    = "test"
+	ReleaseENV = "release"
 )
 
 func Server(addr ...string) {
-	if os.Getenv("APP_ENV") == consts.ReleaseENV {
+	if os.Getenv("APP_ENV") == ReleaseENV {
 		gin.SetMode(gin.ReleaseMode)
-	}else{
+	} else {
 		gin.SetMode(gin.TestMode)
 	}
 
@@ -41,18 +48,18 @@ func Ping(c *gin.Context) {
 func LinkPreview(c *gin.Context) {
 	url := c.Request.FormValue("url")
 
-	if strings.HasPrefix(url, "https") || strings.HasPrefix(url, "http"){
+	if strings.HasPrefix(url, "https") || strings.HasPrefix(url, "http") {
 		c.JSON(http.StatusOK, gin.H{
-			"code": consts.APISuccessCode,
-			"msg": "success",
+			"code": SuccessCode,
+			"msg":  "success",
 			"data": url,
 		})
 		return
 	}
 
 	c.JSON(http.StatusBadRequest, gin.H{
-		"code": consts.APIFailCode,
-		"msg": "fail",
+		"code": FailCode,
+		"msg":  "fail",
 		"data": url,
 	})
 }

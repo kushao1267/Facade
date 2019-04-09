@@ -12,5 +12,5 @@ func GetNowTimeStamp() int64 {
 
 //GetNowTimeStampStr 获取时间戳，单位ms，类型为string
 func GetNowTimeStampStr() string {
-	return strconv.FormatInt(MakeTimestamp(), 10)
+	return strconv.FormatInt(GetNowTimeStamp(), 10)
 }

@@ -1,4 +1,4 @@
-package handler
+package handlers
 
 import (
 	"github.com/kushao1267/facade/facade/config"
@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	title_field = "title"
-	image_field = "image"
+	titleField = "title"
+	imageField = "image"
 )
 
 type ReturnData struct {
@@ -37,24 +37,24 @@ func NewReturnData(hostname, exception, title, description string, err error, im
 
 	if hasDefault(hostname) {
 		r.Exception = ""
-	}else {
+	} else {
 		r.Exception = exception
 	}
 
 	if len(description) > 125 {
 		r.Description = description[:125] + "..."
-	}else{
+	} else {
 		r.Description = description
 	}
 
 	if title != "" {
 		r.Title = title
 	} else {
-		r.Title = getDefault(hostname, title_field)
+		r.Title = getDefault(hostname, titleField)
 	}
 
 	if isForceDefault(hostname) || len(r.Images) == 0 {
-		r.Images = append(r.Images, getDefault(hostname, image_field))
+		r.Images = append(r.Images, getDefault(hostname, imageField))
 	} else {
 		r.Images = images
 	}
@@ -80,9 +80,9 @@ func isForceDefault(hostname string) bool {
 
 func getDefault(hostname, field string) string {
 	if val, ok := config.AllConf.ReturnMap[hostname]; ok {
-		if field == title_field {
+		if field == titleField {
 			return val.Title
-		} else if field == image_field {
+		} else if field == imageField {
 			return val.Image
 		}
 	}
