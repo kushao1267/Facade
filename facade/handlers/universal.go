@@ -47,7 +47,7 @@ func (e Extracted) Title() string {
 }
 
 func (e Extracted) Image() string {
-	if val, ok := e["title"]; ok {
+	if val, ok := e["image"]; ok {
 		if len(val) > 0 {
 			return val[0]
 		}
@@ -56,7 +56,7 @@ func (e Extracted) Image() string {
 }
 
 func (e Extracted) Video() string {
-	if val, ok := e["title"]; ok {
+	if val, ok := e["video"]; ok {
 		if len(val) > 0 {
 			return val[0]
 		}
@@ -65,7 +65,7 @@ func (e Extracted) Video() string {
 }
 
 func (e Extracted) Description() string {
-	if val, ok := e["title"]; ok {
+	if val, ok := e["description"]; ok {
 		if len(val) > 0 {
 			return val[0]
 		}
@@ -74,7 +74,7 @@ func (e Extracted) Description() string {
 }
 
 func (e Extracted) Url() string {
-	if val, ok := e["title"]; ok {
+	if val, ok := e["url"]; ok {
 		if len(val) > 0 {
 			return val[0]
 		}
@@ -83,7 +83,7 @@ func (e Extracted) Url() string {
 }
 
 func (e Extracted) Feed() string {
-	if val, ok := e["title"]; ok {
+	if val, ok := e["feed"]; ok {
 		if len(val) > 0 {
 			return val[0]
 		}

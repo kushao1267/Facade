@@ -2,7 +2,6 @@ package config
 
 import (
 	"github.com/BurntSushi/toml"
-	"reflect"
 	"time"
 )
 
