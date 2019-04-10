@@ -11,6 +11,7 @@ const MarkTechnique = false
 
 // Extracted :Contains data extracted from a page.
 type Extracted map[string][]string
+var emptyData = ""
 
 func (e Extracted) Represent() []string {
 	maxShown := 40
@@ -43,7 +44,7 @@ func (e Extracted) Title() string {
 			return val[0]
 		}
 	}
-	return ""
+	return emptyData
 }
 
 func (e Extracted) Image() string {
@@ -52,7 +53,7 @@ func (e Extracted) Image() string {
 			return val[0]
 		}
 	}
-	return ""
+	return emptyData
 }
 
 func (e Extracted) Video() string {
@@ -61,7 +62,7 @@ func (e Extracted) Video() string {
 			return val[0]
 		}
 	}
-	return ""
+	return emptyData
 }
 
 func (e Extracted) Description() string {
@@ -70,7 +71,7 @@ func (e Extracted) Description() string {
 			return val[0]
 		}
 	}
-	return ""
+	return emptyData
 }
 
 func (e Extracted) Url() string {
@@ -79,7 +80,7 @@ func (e Extracted) Url() string {
 			return val[0]
 		}
 	}
-	return ""
+	return emptyData
 }
 
 func (e Extracted) Feed() string {
@@ -88,7 +89,7 @@ func (e Extracted) Feed() string {
 			return val[0]
 		}
 	}
-	return ""
+	return emptyData
 }
 
 // Extractor :Extracts title, image and description from an HTML document.
@@ -116,7 +117,7 @@ func NewExtractor(techniques []techniques.Technique, strictTypes bool) Extractor
 // Technique is a string including the full module path
 // and class name for the technique,
 // HTML is a string representing an HTML document.
-func (d Extractor) runTechnique(technique techniques.Technique, html string) techniques.DirtyExtracted {
+func (d Extractor) runTechnique(technique techniques.Technique, html string) *techniques.DirtyExtracted {
 	technique.SetExtractor(d)
 	return technique.Extract(html)
 }
@@ -212,7 +213,7 @@ func (d Extractor) Extract(html, sourceUrl string) Extracted {
 
 	for _, technique := range d.techniques {
 
-		techniqueExtracted := d.runTechnique(technique, html)
+		techniqueExtracted := *d.runTechnique(technique, html)
 		techniqueCleaned := d.cleanUp(techniqueExtracted, technique, sourceUrl)
 
 		for dataType, dataValues := range techniqueCleaned {
