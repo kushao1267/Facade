@@ -1,70 +1,15 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
-*.DS_Store
-
-# C extensions
-*.so
-
-# Distribution / packaging
-
-build/
-develop-eggs/
-dist/
-
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-.hypothesis/
-
-# Translations
-*.mo
-*.pot
-
-# SageMath parsed files
-*.sage.py
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# idea
-.idea/
-
-# vscode
+*.pyc
+.DS_Store
+.idea
+Makefile
+local_settings.py
+*~
+.codeintel
+*.log
 .vscode
-
-out/
-# node
-node_modules
-
-*.bak
+celerybeat.pid
+celerybeat-schedule.db
 .env
-
-package-lock.json
-# ignore example binary file
-facade_server
+venv
+*.swp
+/direct_message/settings/local.py
