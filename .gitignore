@@ -1,15 +1,15 @@
-# Byte-compiled / optimized / DLL files
-*.DS_Store
-*.so
-
-# idea
-.idea/
-
-# vscode
+*.pyc
+.DS_Store
+.idea
+Makefile
+local_settings.py
+*~
+.codeintel
+*.log
 .vscode
-
+celerybeat.pid
+celerybeat-schedule.db
 .env
-
-package-lock.json
-# ignore example binary file
-facade_server
+venv
+*.swp
+/direct_message/settings/local.py
