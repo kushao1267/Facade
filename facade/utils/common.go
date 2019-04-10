@@ -1,5 +1,7 @@
 package utils
 
+import "regexp"
+
 // 判断字段串是否在slice中
 func StringInSlice(target string, list []string) bool {
 	for _, elem := range list {
@@ -19,6 +21,39 @@ func RemoveEmptyStringInSlice(list []string) []string {
 		}
 	}
 	return resultList
+}
+
+// MatchOneOf match one of the patterns
+func MatchOneOf(text string, patterns ...string) []string {
+	var (
+		re    *regexp.Regexp
+		value []string
+	)
+	for _, pattern := range patterns {
+		// (?flags): set flags within current group; non-capturing
+		// s: let . match \n (default false)
+		// https://github.com/google/re2/wiki/Syntax
+		re = regexp.MustCompile(pattern)
+		value = re.FindStringSubmatch(text)
+		if len(value) > 0 {
+			return value
+		}
+	}
+	return nil
+}
+
+// Domain get the domain of given URL
+// Example: www.baidu.com -> baidu
+func Domain(url string) string {
+	domainPattern := `([a-z0-9][-a-z0-9]{0,62})\.` +
+		`(com\.cn|com\.hk|` +
+		`cn|com|net|edu|gov|biz|org|info|pro|name|xxx|xyz|be|` +
+		`me|top|cc|tv|tt)`
+	domain := MatchOneOf(url, domainPattern)
+	if domain != nil {
+		return domain[1]
+	}
+	return "Universal"
 }
 
 //// 从结构体根据名称获取slice字段的值
