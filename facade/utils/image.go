@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"github.com/kushao1267/facade/facade/consts"
 	"github.com/levigross/grequests"
 	"image"
 	"time"

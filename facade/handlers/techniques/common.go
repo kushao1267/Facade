@@ -2,11 +2,10 @@ package techniques
 
 import (
 	"github.com/PuerkitoBio/goquery"
-	"github.com/kushao1267/facade/facade/handlers"
 	"strings"
 )
 
-var emptyDirtyExtracted = &DirtyExtracted{
+var emptyDirtyExtracted = DirtyExtracted{
 	"titles":       []string{},
 	"descriptions": []string{},
 	"images":       []string{},
@@ -17,8 +16,7 @@ var emptyDirtyExtracted = &DirtyExtracted{
 type Technique interface {
 	SetName(name string)
 	GetName() string
-	SetExtractor(extracted handlers.Extractor)
-	Extract(html string) *DirtyExtracted
+	Extract(html string) DirtyExtracted
 }
 
 // DirtyExtracted :未经过clean的提取结果
@@ -26,8 +24,7 @@ type DirtyExtracted map[string][]string
 
 // Technique
 type BaseTechnique struct {
-	Name      string
-	Extractor handlers.Extractor
+	Name string
 }
 
 func (t BaseTechnique) SetName(name string) {
@@ -38,12 +35,8 @@ func (t BaseTechnique) GetName() string {
 	return t.Name
 }
 
-func (t BaseTechnique) SetExtractor(extractor handlers.Extractor) {
-	t.Extractor = extractor
-}
-
 // Extract :Extract data from a string representing an HTML document.
-func (t BaseTechnique) Extract(html string) *DirtyExtracted {
+func (t BaseTechnique) Extract(html string) DirtyExtracted {
 	return emptyDirtyExtracted
 }
 
@@ -62,8 +55,7 @@ func (t BaseTechnique) Extract(html string) *DirtyExtracted {
 // This is usually a last-resort, low quality, but reliable parsing mechanism.
 // HeadTagsTechnique
 type HeadTagsTechnique struct {
-	Name      string
-	Extractor handlers.Extractor
+	Name string
 }
 
 func (t HeadTagsTechnique) SetName(name string) {
@@ -74,27 +66,63 @@ func (t HeadTagsTechnique) GetName() string {
 	return t.Name
 }
 
-func (t HeadTagsTechnique) SetExtractor(extractor handlers.Extractor) {
-	t.Extractor = extractor
+func (t HeadTagsTechnique) GetMetaNameMap() *map[string]string {
+	return &map[string]string{
+		"description": "descriptions",
+		"author":      "authors",
+	}
 }
 
 // Extract :Extract data from a string representing an HTML document.
-func (t HeadTagsTechnique) Extract(html string) *DirtyExtracted {
+func (t HeadTagsTechnique) Extract(html string) DirtyExtracted {
+	extracted := emptyDirtyExtracted
 	// Load the HTML document
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 	if err != nil {
-		return emptyDirtyExtracted
+		return extracted
 	}
-	// Find the review items
-	title := doc.Find("title").First().Text()
-	&DirtyExtracted{"titles": []string{title}}
-	return emptyDirtyExtracted
+	// Find the titlew
+	if title := doc.Find("title").First().Text(); title != "" {
+		extracted["title"] = append(extracted["title"], title)
+	}
+	// extract data from meta tags
+	metaNameMap := *t.GetMetaNameMap()
+	doc.Find("meta").Each(func(i int, selection *goquery.Selection) {
+		name, e1 := selection.Attr("name")
+		content, e2 := selection.Attr("")
+		if e1 && e2 {
+			if nameDest, ok := metaNameMap[name]; ok {
+				if _, ok1 := extracted[nameDest]; ok1 {
+					extracted[nameDest] = append(extracted[nameDest], content)
+				}
+			}
+		}
+	})
+
+	// extract data from link tags
+	doc.Find("link").Each(func(i int, selection *goquery.Selection) {
+		if rel, ok := selection.Attr("rel"); ok {
+			href, ok1 := selection.Attr("href")
+			_type, ok2 := selection.Attr("type")
+			if strings.Contains(rel, "canonical") && ok1 {
+				if _, ok3 := extracted["urls"]; ok3 {
+					extracted["urls"] = append(extracted["urls"], href)
+				}
+			} else if strings.Contains(rel, "alternate") && ok1 && ok2 && _type == "application/rss+xml" {
+				if _, ok3 := extracted["feeds"]; ok3 {
+					extracted["feeds"] = append(extracted["feeds"], href)
+				}
+			}
+		}
+
+	})
+
+	return extracted
 }
 
 // HTML5SemanticTagsTechnique
 type HTML5SemanticTagsTechnique struct {
-	Name      string
-	Extractor handlers.Extractor
+	Name string
 }
 
 func (t HTML5SemanticTagsTechnique) SetName(name string) {
@@ -103,10 +131,6 @@ func (t HTML5SemanticTagsTechnique) SetName(name string) {
 
 func (t HTML5SemanticTagsTechnique) GetName() string {
 	return t.Name
-}
-
-func (t HTML5SemanticTagsTechnique) SetExtractor(extractor handlers.Extractor) {
-	t.Extractor = extractor
 }
 
 // Extract :Extract data from a string representing an HTML document.
@@ -121,8 +145,7 @@ func (t HTML5SemanticTagsTechnique) Extract(html string) DirtyExtracted {
 
 // SemanticTagsTechnique
 type SemanticTagsTechnique struct {
-	Name      string
-	Extractor handlers.Extractor
+	Name string
 }
 
 func (t SemanticTagsTechnique) SetName(name string) {
@@ -131,10 +154,6 @@ func (t SemanticTagsTechnique) SetName(name string) {
 
 func (t SemanticTagsTechnique) GetName() string {
 	return t.Name
-}
-
-func (t SemanticTagsTechnique) SetExtractor(extractor handlers.Extractor) {
-	t.Extractor = extractor
 }
 
 // Extract :Extract data from a string representing an HTML document.

@@ -11,6 +11,7 @@ const MarkTechnique = false
 
 // Extracted :Contains data extracted from a page.
 type Extracted map[string][]string
+
 var emptyData = ""
 
 func (e Extracted) Represent() []string {
@@ -117,8 +118,7 @@ func NewExtractor(techniques []techniques.Technique, strictTypes bool) Extractor
 // Technique is a string including the full module path
 // and class name for the technique,
 // HTML is a string representing an HTML document.
-func (d Extractor) runTechnique(technique techniques.Technique, html string) *techniques.DirtyExtracted {
-	technique.SetExtractor(d)
+func (d Extractor) runTechnique(technique techniques.Technique, html string) techniques.DirtyExtracted {
 	return technique.Extract(html)
 }
 
@@ -213,7 +213,7 @@ func (d Extractor) Extract(html, sourceUrl string) Extracted {
 
 	for _, technique := range d.techniques {
 
-		techniqueExtracted := *d.runTechnique(technique, html)
+		techniqueExtracted := d.runTechnique(technique, html)
 		techniqueCleaned := d.cleanUp(techniqueExtracted, technique, sourceUrl)
 
 		for dataType, dataValues := range techniqueCleaned {
