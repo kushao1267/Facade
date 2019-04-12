@@ -1,31 +1,9 @@
-package common
+package techniques
 
 import (
 	"fmt"
-	//"io/ioutil"
-	//"net/http"
 	"testing"
 )
-
-//var mockHtml string
-//
-//func getMockHTML() string {
-//	//res, err := http.Get("https://www.toutiao.com/a6673091667941130756/")
-//	res, err := http.Get("http://www.baidu.com")
-//	if err != nil {
-//		fmt.Println(err)
-//	}
-//	defer res.Body.Close()
-//	if res.StatusCode != 200 {
-//		fmt.Println("status code error: " + string(res.StatusCode) + " " + res.Status)
-//	}
-//	bodyBytes, _ := ioutil.ReadAll(res.Body)
-//	return string(bodyBytes)
-//}
-//
-//func init() {
-//	mockHtml = getMockHTML()
-//}
 
 func TestHeadTagsTechnique_Extract(t *testing.T) {
 	var technique HeadTagsTechnique
