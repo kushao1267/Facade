@@ -1,59 +1,10 @@
-package techniques
+package common
 
 import (
 	"github.com/PuerkitoBio/goquery"
+	"github.com/kushao1267/facade/facade/techniques"
 	"strings"
 )
-
-var (
-	emptyString = ""
-	titlesField = "titles"
-	descriptionsField = "descriptions"
-	imagesField = "images"
-	urlsField = "urls"
-	videosField = "videos"
-	feedsField = "feeds"
-	)
-
-func getEmptyDirtyExtracted() DirtyExtracted{
-	return DirtyExtracted{
-		titlesField:       []string{},
-		descriptionsField: []string{},
-		imagesField:       []string{},
-		urlsField:         []string{},
-		videosField:         []string{},
-		feedsField:         []string{},
-	}
-}
-
-// Technique 必须实现的方法
-type Technique interface {
-	SetName(name string)
-	GetName() string
-	Extract(html string) DirtyExtracted
-}
-
-// DirtyExtracted :未经过clean的提取结果
-type DirtyExtracted map[string][]string
-
-
-// Technique
-type BaseTechnique struct {
-	Name string
-}
-
-func (t BaseTechnique) SetName(name string) {
-	t.Name = name
-}
-
-func (t BaseTechnique) GetName() string {
-	return t.Name
-}
-
-// Extract :Extract data from a string representing an HTML document.
-func (t BaseTechnique) Extract(html string) DirtyExtracted {
-	return getEmptyDirtyExtracted()
-}
 
 // Extract info from standard HTML metatags like title
 // This is usually a last-resort, low quality, but reliable parsing mechanism.
@@ -72,14 +23,14 @@ func (t HeadTagsTechnique) GetName() string {
 
 func (t HeadTagsTechnique) getMetaNameMap() *map[string]string {
 	return &map[string]string{
-		descriptionsField: descriptionsField,
-		"author":      "authors",
+		techniques.DescriptionsField: techniques.DescriptionsField,
+		"author":                     "authors",
 	}
 }
 
 // Extract :Extract data from a string representing an HTML document.
-func (t HeadTagsTechnique) Extract(html string) DirtyExtracted {
-	extracted := getEmptyDirtyExtracted()
+func (t HeadTagsTechnique) Extract(html string) techniques.DirtyExtracted {
+	extracted := techniques.GetEmptyDirtyExtracted()
 	t.setName("HeadTagsTechnique")
 
 	// Load the HTML document
@@ -87,15 +38,15 @@ func (t HeadTagsTechnique) Extract(html string) DirtyExtracted {
 	if err != nil {
 		return extracted
 	}
-	// Find the titlew
-	if title := doc.Find("title").First().Text(); title != emptyString {
-		extracted[titlesField] = append(extracted[titlesField], title)
+	// Find the title
+	if title := doc.Find("title").First().Text(); title != techniques.EmptyString {
+		extracted[techniques.TitlesField] = append(extracted[techniques.TitlesField], title)
 	}
 	// extract data from meta tags
 	metaNameMap := *t.getMetaNameMap()
 	doc.Find("meta").Each(func(i int, selection *goquery.Selection) {
 		name, e1 := selection.Attr("name")
-		content, e2 := selection.Attr("")
+		content, e2 := selection.Attr("content")
 		if e1 && e2 {
 			if nameDest, ok := metaNameMap[name]; ok {
 				if _, ok1 := extracted[nameDest]; ok1 {
@@ -111,12 +62,12 @@ func (t HeadTagsTechnique) Extract(html string) DirtyExtracted {
 			href, ok1 := selection.Attr("href")
 			_type, ok2 := selection.Attr("type")
 			if strings.Contains(rel, "canonical") && ok1 {
-				if _, ok3 := extracted[urlsField]; ok3 {
-					extracted[urlsField] = append(extracted[urlsField], href)
+				if _, ok3 := extracted[techniques.UrlsField]; ok3 {
+					extracted[techniques.UrlsField] = append(extracted[techniques.UrlsField], href)
 				}
 			} else if strings.Contains(rel, "alternate") && ok1 && ok2 && _type == "application/rss+xml" {
-				if _, ok3 := extracted[feedsField]; ok3 {
-					extracted[feedsField] = append(extracted[feedsField], href)
+				if _, ok3 := extracted[techniques.FeedsField]; ok3 {
+					extracted[techniques.FeedsField] = append(extracted[techniques.FeedsField], href)
 				}
 			}
 		}
@@ -142,8 +93,8 @@ func (t HTML5SemanticTagsTechnique) GetName() string {
 // The HTML5 `article` tag, and also the `video` tag give us some useful
 // hints for extracting page information for the sites which happen to
 // utilize these tags.
-func (t HTML5SemanticTagsTechnique) Extract(html string) DirtyExtracted {
-	extracted := getEmptyDirtyExtracted()
+func (t HTML5SemanticTagsTechnique) Extract(html string) techniques.DirtyExtracted {
+	extracted := techniques.GetEmptyDirtyExtracted()
 	t.setName("HTML5SemanticTagsTechnique")
 
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
@@ -152,18 +103,18 @@ func (t HTML5SemanticTagsTechnique) Extract(html string) DirtyExtracted {
 	}
 
 	doc.Find("article").Each(func(i int, selection *goquery.Selection) {
-		if title:= selection.Find("h1").Text(); title!= emptyString {
-			extracted[titlesField] = append(extracted[titlesField], title)
+		if title := selection.Find("h1").Text(); title != techniques.EmptyString {
+			extracted[techniques.TitlesField] = append(extracted[techniques.TitlesField], title)
 		}
-		if desc:= selection.Find("p").Text(); desc!= emptyString {
-			extracted[descriptionsField] = append(extracted[descriptionsField], desc)
+		if desc := selection.Find("p").Text(); desc != techniques.EmptyString {
+			extracted[techniques.DescriptionsField] = append(extracted[techniques.DescriptionsField], desc)
 		}
 	})
 
 	doc.Find("video").Each(func(i int, selection *goquery.Selection) {
 		selection.Find("source").Each(func(i int, selection *goquery.Selection) {
-			if src ,ok := selection.Attr("src"); ok{
-				extracted[videosField] = append(extracted[videosField], src)
+			if src, ok := selection.Attr("src"); ok {
+				extracted[techniques.VideosField] = append(extracted[techniques.VideosField], src)
 			}
 		})
 	})
@@ -190,48 +141,50 @@ func (t SemanticTagsTechnique) GetName() string {
 
 // tuple形式的结构可以用struct构造
 type extractString struct {
-	tag string
-	dest string
+	tag       string
+	dest      string
 	maxStores int
 }
 
- // list to support ordering of semantics, e.g. h1
- // is higher quality than h2 and so on
- // format is {"name of tag", "destination list", store_first_n}
-func (t SemanticTagsTechnique) getExtractString() *[]extractString {
-	return &[]extractString{
-		{
-			"h1", titlesField, 3,
-		},
-		{
-			"h2", titlesField, 3,
-		},
-		{
-			"h3", titlesField, 1,
-		},
-		{
-			"p", descriptionsField, 5,
-		},
-	}
-}
-
 type extractAttr struct {
-	tag string
-	dest string
-	attr string
+	tag       string
+	dest      string
+	attr      string
 	maxStores int
 }
 
 // list to support ordering of semantics, e.g. h1
 // is higher quality than h2 and so on
 // format is {"name of tag", "destination list", store_first_n}
+func (t SemanticTagsTechnique) getExtractString() *[]extractString {
+	return &[]extractString{
+		{
+			"h1", techniques.TitlesField, 3,
+		},
+		{
+			"h2", techniques.TitlesField, 3,
+		},
+		{
+			"h3", techniques.TitlesField, 1,
+		},
+		{
+			"p", techniques.DescriptionsField, 5,
+		},
+	}
+}
+
+// list to support ordering of semantics, e.g. h1
+// is higher quality than h2 and so on
+// format is {"name of tag", "destination list", store_first_n}
 func (t SemanticTagsTechnique) getExtractAttribute() *[]extractAttr {
-	return &[]extractAttr{{"image", titlesField, "src",3}}
+	return &[]extractAttr{
+		{"img", techniques.ImagesField, "src", 3},
+	}
 }
 
 // Extract :Extract data from a string representing an HTML document.
-func (t SemanticTagsTechnique) Extract(html string) DirtyExtracted {
-	extracted :=getEmptyDirtyExtracted()
+func (t SemanticTagsTechnique) Extract(html string) techniques.DirtyExtracted {
+	extracted := techniques.GetEmptyDirtyExtracted()
 	t.setName("SemanticTagsTechnique")
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 	if err != nil {
@@ -240,21 +193,21 @@ func (t SemanticTagsTechnique) Extract(html string) DirtyExtracted {
 
 	extractStr := *t.getExtractString()
 	extractAttr := *t.getExtractAttribute()
-	for _, val := range extractStr{
+	for _, val := range extractStr {
 		stores := 0
 		doc.Find(val.tag).Each(func(i int, selection *goquery.Selection) {
-			if stores == val.maxStores{
+			if stores < val.maxStores {
 				extracted[val.dest] = append(extracted[val.dest], selection.Text())
 			}
 			stores += 1
 		})
 	}
 
-	for _, val := range extractAttr{
+	for _, val := range extractAttr {
 		stores := 0
 		doc.Find(val.tag).Each(func(i int, selection *goquery.Selection) {
-			if stores < val.maxStores{
-				if attr, ok := selection.Attr(val.attr);ok{
+			if stores < val.maxStores {
+				if attr, ok := selection.Attr(val.attr); ok {
 					extracted[val.dest] = append(extracted[val.dest], attr)
 				}
 			}
