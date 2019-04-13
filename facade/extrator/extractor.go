@@ -1,8 +1,8 @@
-package handlers
+package extrator
 
 import "fmt"
 import (
-	"github.com/kushao1267/facade/facade/handlers/techniques"
+	"github.com/kushao1267/facade/facade/techniques"
 	"github.com/kushao1267/facade/facade/utils"
 	"strings"
 )
@@ -101,7 +101,7 @@ type Extractor struct {
 	techniques  []techniques.Technique
 }
 
-func NewExtractor(techniques []techniques.Technique, strictTypes bool) Extractor {
+func NewExtractor(strictTypes bool, techniques... techniques.Technique) Extractor {
 	d := Extractor{}
 
 	d.urlTypes = []string{"images", "urls", "feeds", "videos"}
@@ -125,6 +125,13 @@ func (d Extractor) runTechnique(technique techniques.Technique, html string) tec
 // cleanUpText Cleanup text values like titles or descriptions.
 func (d Extractor) cleanUpText(value, mark string) string {
 	text := strings.TrimSpace(value)
+	// 長度限制
+	if len(text) > 125 {
+		text = text[:125] + "..."
+	} else {
+		text = text
+	}
+
 	if mark != "" {
 		text = mark + " " + text
 	}
@@ -162,7 +169,7 @@ func (d Extractor) cleanUpUrl(valueUrl, sourceUrl, mark string) string {
 // 4. marks the technique that produced the result
 // 5. returns only specified text_types and url_types depending on self.strict_types
 func (d Extractor) cleanUp(results techniques.DirtyExtracted, technique techniques.Technique, sourceUrl string) Extracted {
-	var cleanedResults Extracted
+	cleanedResults := Extracted{}
 
 	var mark string
 	if MarkTechnique {
@@ -187,14 +194,12 @@ func (d Extractor) cleanUp(results techniques.DirtyExtracted, technique techniqu
 			continue
 		}
 
-		var uniqueValues []string
 		for _, dataValue := range dataValues {
-			if utils.StringInSlice(dataValue, uniqueValues) {
-				uniqueValues = append(uniqueValues, dataValue)
+			if !utils.StringInSlice(dataValue, cleanedResults[dataType]) {
+				cleanedResults[dataType] = append(cleanedResults[dataType], dataValue)
 			}
 		}
 
-		cleanedResults[dataType] = uniqueValues
 	}
 	return cleanedResults
 }
@@ -209,7 +214,7 @@ func (d Extractor) cleanUp(results techniques.DirtyExtracted, technique techniqu
 // cleanup to be performed, such as converting relative URLs
 // into absolute URLs and such.
 func (d Extractor) Extract(html, sourceUrl string) Extracted {
-	var extracted Extracted
+	var extracted = Extracted{}
 
 	for _, technique := range d.techniques {
 

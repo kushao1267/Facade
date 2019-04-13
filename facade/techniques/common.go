@@ -5,12 +5,26 @@ import (
 	"strings"
 )
 
+type BaseTechnique struct {
+	Name string
+}
+func (t BaseTechnique) setName(name string) {
+	t.Name = name
+}
+
+func (t BaseTechnique) GetName() string {
+	return t.Name
+}
+
+func (t BaseTechnique) Extract(html string) DirtyExtracted{
+	return GetEmptyDirtyExtracted()
+}
+
+
 // Extract info from standard HTML metatags like title
 // This is usually a last-resort, low quality, but reliable parsing mechanism.
 // HeadTagsTechnique
-type HeadTagsTechnique struct {
-	Name string
-}
+type HeadTagsTechnique BaseTechnique
 
 func (t HeadTagsTechnique) setName(name string) {
 	t.Name = name
@@ -77,9 +91,7 @@ func (t HeadTagsTechnique) Extract(html string) DirtyExtracted {
 }
 
 // HTML5SemanticTagsTechnique
-type HTML5SemanticTagsTechnique struct {
-	Name string
-}
+type HTML5SemanticTagsTechnique BaseTechnique
 
 func (t HTML5SemanticTagsTechnique) setName(name string) {
 	t.Name = name
@@ -126,9 +138,7 @@ func (t HTML5SemanticTagsTechnique) Extract(html string) DirtyExtracted {
 //
 // This is a true last resort technique.
 // SemanticTagsTechnique
-type SemanticTagsTechnique struct {
-	Name string
-}
+type SemanticTagsTechnique BaseTechnique
 
 func (t SemanticTagsTechnique) setName(name string) {
 	t.Name = name

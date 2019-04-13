@@ -7,9 +7,7 @@ import (
 )
 
 // WeChatTechnique
-type WeChatTechnique struct {
-	Name string
-}
+type WeChatTechnique BaseTechnique
 
 func (t WeChatTechnique) setName(name string) {
 	t.Name = name

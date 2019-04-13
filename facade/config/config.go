@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/BurntSushi/toml"
+	"log"
 	"time"
 )
 
@@ -27,10 +28,10 @@ type Config struct {
 }
 
 // AllConf 全局配置
-var AllConf *Config
+var AllConf = &Config{}
 
 func init() {
-	if _, err := toml.DecodeFile("config.toml", AllConf); err != nil {
-		panic("加载配置失败")
+	if _, err := toml.DecodeFile("./config.toml", AllConf); err != nil {
+		log.Fatal("加载配置失败", err)
 	}
 }

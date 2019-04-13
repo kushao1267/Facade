@@ -23,6 +23,14 @@ func RemoveEmptyStringInSlice(list []string) []string {
 	return resultList
 }
 
+//
+func GetSafeFirst(s []string) string {
+	if len(s)>0{
+		return s[0]
+	}
+	return ""
+}
+
 // MatchOneOf match one of the patterns
 func MatchOneOf(text string, patterns ...string) []string {
 	var (

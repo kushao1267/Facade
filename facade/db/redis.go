@@ -1,6 +1,7 @@
 package db
 
 import (
+	"github.com/kushao1267/facade/facade/logger"
 	"time"
 	"fmt"
 	"github.com/go-redis/redis"
@@ -8,7 +9,7 @@ import (
 	"github.com/kushao1267/facade/facade/utils"
 )
 
-var LinkPreviewService *LinkPreview
+var LinkPreviewService = &LinkPreview{}
 var redisdb *redis.Client
 
 // See use: https://github.com/go-redis/redis/blob/master/example_test.go
@@ -28,7 +29,7 @@ func NewRedis(c config.Redis) *redis.Client{
 	})
 
 	if err := db.Ping().Err(); err != nil {
-		panic("初始化redis失败!")
+		logger.JsonLogger.Fatal("初始化redis失败!")
 	}
 	return db
 }
@@ -67,7 +68,8 @@ func (l LinkPreview) GetValues(url string, fields ...string) []string{
 	val, err :=redisdb.HMGet(key, fields...).Result()
 
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		return []string{}
 	}else if  err == redis.Nil { // key does not exists
 		for i, _ := range fields {
 			s[i] = ""

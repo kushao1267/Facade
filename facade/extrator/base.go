@@ -1,4 +1,4 @@
-package handlers
+package extrator
 
 import (
 	"github.com/kushao1267/facade/facade/config"

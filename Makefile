@@ -20,7 +20,8 @@ exec:
 	docker exec -it ${APP_NAME} /bin/bash
 
 test:
-	# run test
+	# 运行测试
+	go test -v -mod=vendor ./facade/techniques/*
 
 tidy:
 	go mod tidy

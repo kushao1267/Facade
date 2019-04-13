@@ -7,9 +7,7 @@ import (
 )
 
 // ToutiaoTechnique
-type ToutiaoTechnique struct {
-	Name string
-}
+type ToutiaoTechnique BaseTechnique
 
 func (t ToutiaoTechnique) setName(name string) {
 	t.Name = name

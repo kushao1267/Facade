@@ -47,7 +47,7 @@ func (i *ImageEntity) getImage() {
 
 	imgConfig, _, err1 := image.DecodeConfig(resp)
 
-	if err != nil || err1 != nil { //请求失败 or 解析图片失败
+	if err != nil || err1 != nil { // 请求失败 or 解析图片失败
 		i.width, i.height, i.ocuppies = 0, 0, 0
 		return
 	}
