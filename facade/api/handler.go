@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/kushao1267/facade/facade/db"
 	"github.com/kushao1267/facade/facade/extrator"
@@ -33,24 +32,24 @@ func LinkPreview(c *gin.Context) {
 			db.LinkPreviewService.Description,
 			db.LinkPreviewService.Image)
 
-		if len(result) > 0{ // 缓存存在
+		if len(result) > 0 { // 缓存存在
 			c.JSON(http.StatusOK, gin.H{
 				"code": SuccessCode,
 				"msg":  "success",
 				"data": ReturnData{
-					"title": result[0],
-					"description":result[1],
-					"image": result[2],
+					"title":       result[0],
+					"description": result[1],
+					"image":       result[2],
 				},
 			})
 			return
 		}
 		// 抓取
 		// 1.根据域名判断需要使用的technique
-		host, err:=utils.GetHostName(url)
+		host, err := utils.GetHostName(url)
 		tech, err1 := techniques.GetTechnique(host)
 		if err == nil && err1 == nil {
-			extractor:= extrator.NewExtractor(
+			extractor := extrator.NewExtractor(
 				false,
 				tech,
 				techniques.HeadTagsTechnique{"HeadTagsTechnique"},
@@ -63,9 +62,9 @@ func LinkPreview(c *gin.Context) {
 				"code": SuccessCode,
 				"msg":  "success",
 				"data": ReturnData{
-					"title": extracted[techniques.TitlesField][0],
-					"description":extracted[techniques.DescriptionsField][0],
-					"image": extracted[techniques.ImagesField][0],
+					"title":       extracted[techniques.TitlesField][0],
+					"description": extracted[techniques.DescriptionsField][0],
+					"image":       extracted[techniques.ImagesField][0],
 				},
 			})
 			return
@@ -85,9 +84,9 @@ func LinkPreview(c *gin.Context) {
 			"code": SuccessCode,
 			"msg":  "success",
 			"data": ReturnData{
-				"title": utils.GetSafeFirst(extracted[techniques.TitlesField]),
-				"description":utils.GetSafeFirst(extracted[techniques.DescriptionsField]),
-				"image": utils.GetSafeFirst(extracted[techniques.ImagesField]),
+				"title":       utils.GetSafeFirst(extracted[techniques.TitlesField]),
+				"description": utils.GetSafeFirst(extracted[techniques.DescriptionsField]),
+				"image":       utils.GetSafeFirst(extracted[techniques.ImagesField]),
 			},
 		})
 		return
@@ -99,5 +98,3 @@ func LinkPreview(c *gin.Context) {
 		"data": url,
 	})
 }
-
-

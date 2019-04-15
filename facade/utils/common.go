@@ -2,7 +2,7 @@ package utils
 
 import "regexp"
 
-// 判断字段串是否在slice中
+// StringInSlice 判断字段串是否在slice中
 func StringInSlice(target string, list []string) bool {
 	for _, elem := range list {
 		if elem == target {
@@ -12,7 +12,7 @@ func StringInSlice(target string, list []string) bool {
 	return false
 }
 
-// 滤掉空字符串
+// RemoveEmptyStringInSlice 从slice中滤掉空字符串
 func RemoveEmptyStringInSlice(list []string) []string {
 	var resultList []string
 	for _, elem := range list {
@@ -23,9 +23,9 @@ func RemoveEmptyStringInSlice(list []string) []string {
 	return resultList
 }
 
-//
+// GetSafeFirst 从slice中获取第一个字符串，没有则返回空串
 func GetSafeFirst(s []string) string {
-	if len(s)>0{
+	if len(s) > 0 {
 		return s[0]
 	}
 	return ""

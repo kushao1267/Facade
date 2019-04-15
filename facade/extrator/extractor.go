@@ -101,16 +101,14 @@ type Extractor struct {
 	techniques  []techniques.Technique
 }
 
-func NewExtractor(strictTypes bool, techniques... techniques.Technique) Extractor {
-	d := Extractor{}
-
-	d.urlTypes = []string{"images", "urls", "feeds", "videos"}
-	d.textTypes = []string{"titles", "descriptions"}
-	d.strictTypes = strictTypes
-
-	if len(techniques) > 0 {
-		d.techniques = techniques
+func NewExtractor(strictTypes bool, techniques ...techniques.Technique) Extractor {
+	d := Extractor{
+		[]string{"images", "urls", "feeds", "videos"},
+		[]string{"titles", "descriptions"},
+		strictTypes,
+		techniques,
 	}
+
 	return d
 }
 
@@ -125,11 +123,9 @@ func (d Extractor) runTechnique(technique techniques.Technique, html string) tec
 // cleanUpText Cleanup text values like titles or descriptions.
 func (d Extractor) cleanUpText(value, mark string) string {
 	text := strings.TrimSpace(value)
-	// 長度限制
+	// 长度限制
 	if len(text) > 125 {
 		text = text[:125] + "..."
-	} else {
-		text = text
 	}
 
 	if mark != "" {
