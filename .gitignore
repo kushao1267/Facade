@@ -5,4 +5,5 @@ Makefile
 .codeintel
 *.log
 .vscode
+.env
 venv
