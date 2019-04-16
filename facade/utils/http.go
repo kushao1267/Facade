@@ -2,8 +2,9 @@ package utils
 
 import (
 	"encoding/json"
-	"github.com/kushao1267/facade/facade/logger"
 	"github.com/levigross/grequests"
+	"github.com/mgutz/ansi"
+	"log"
 	"net/url"
 	"path"
 	"regexp"
@@ -35,10 +36,10 @@ func GetJson(url string, v interface{}) {
 		RequestTimeout: requestImgTimeout,
 	})
 	if err!=nil{
-		logger.JsonLogger.Error("GetJson: ", err)
+		log.Println(ansi.Color("[GetJson]:", "red"), err)
 	}
 	if err := json.Unmarshal(resp.Bytes(), &v); err != nil {
-		logger.JsonLogger.Error("GetJson: ", err)
+		log.Println(ansi.Color("[GetJson]:", "red"), err)
 	}
 }
 
@@ -52,7 +53,7 @@ func GetHtml(url string) string {
 				"t/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15"},
 	})
 	if err!=nil{
-		logger.JsonLogger.Error("GetHtml", err)
+		log.Println(ansi.Color("[GetHtml]:", "red"), err)
 	}
 
 	return resp.String()

@@ -2,6 +2,7 @@ package techniques
 
 import (
 	"github.com/kushao1267/facade/facade/utils"
+	"log"
 	"testing"
 )
 import (
@@ -23,5 +24,5 @@ func TestWeChatTechnique_Extract(t *testing.T) {
 	if allEmpty {
 		t.Fail()
 	}
-	fmt.Println(extracted)
+	log.Println(extracted)
 }

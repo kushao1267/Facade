@@ -1,7 +1,7 @@
 package api
 
-import "github.com/gin-gonic/gin"
 import (
+	"github.com/gin-gonic/gin"
 	"os"
 )
 
@@ -14,13 +14,18 @@ const (
 )
 
 func Server(addr ...string) {
+	r := gin.New()
+	r.Use(gin.Logger())
+	r.Use(gin.Recovery())  // Use中間件
+
 	if os.Getenv("APP_ENV") == ReleaseENV {
 		gin.SetMode(gin.ReleaseMode)
 	} else {
 		gin.SetMode(gin.TestMode)
 	}
 
-	router := InitRouter()
-	router.Run(addr...)
-}
+	r.GET("/ping", Ping)
+	r.POST("/link_preview", LinkPreview)
 
+	r.Run(addr...)
+}

@@ -39,9 +39,11 @@ type Technique interface {
 type DirtyExtracted map[string][]string
 
 func GetTechnique(host string) (Technique, error){
+	// 从hostname获取相应的technique
 	techMap:=map[string]Technique{
 		"mp.weixin.qq.com": WeChatTechnique{"WeChatTechnique"},
 		"www.toutiao.com":ToutiaoTechnique{"ToutiaoTechnique"},
+		"page.om.qq.com":QQOMTechnique{"QQOMTechnique"},
 	}
 	if val,ok := techMap[host];ok{
 		return val, nil

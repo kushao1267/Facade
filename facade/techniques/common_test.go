@@ -1,7 +1,7 @@
 package techniques
 
 import (
-	"fmt"
+	"log"
 	"testing"
 )
 
@@ -27,7 +27,7 @@ func TestHeadTagsTechnique_Extract(t *testing.T) {
 	if allEmpty {
 		t.Fail()
 	}
-	fmt.Println(extracted)
+	log.Println(extracted)
 }
 
 func TestHTML5SemanticTagsTechnique_Extract(t *testing.T) {
@@ -56,7 +56,7 @@ func TestHTML5SemanticTagsTechnique_Extract(t *testing.T) {
 	if allEmpty {
 		t.Fail()
 	}
-	fmt.Println(extracted)
+	log.Println(extracted)
 }
 
 func TestSemanticTagsTechnique_Extract(t *testing.T) {
@@ -85,5 +85,5 @@ func TestSemanticTagsTechnique_Extract(t *testing.T) {
 	if allEmpty {
 		t.Fail()
 	}
-	fmt.Println(extracted)
+	log.Println(extracted)
 }

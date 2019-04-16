@@ -4,9 +4,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kushao1267/facade/facade/db"
 	"github.com/kushao1267/facade/facade/extrator"
-	"github.com/kushao1267/facade/facade/logger"
 	"github.com/kushao1267/facade/facade/techniques"
 	"github.com/kushao1267/facade/facade/utils"
+	"github.com/mgutz/ansi"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -62,14 +63,14 @@ func LinkPreview(c *gin.Context) {
 				"code": SuccessCode,
 				"msg":  "success",
 				"data": ReturnData{
-					"title":       extracted[techniques.TitlesField][0],
-					"description": extracted[techniques.DescriptionsField][0],
-					"image":       extracted[techniques.ImagesField][0],
+					"title":       utils.GetSafeFirst(extracted[techniques.TitlesField]),
+					"description": utils.GetSafeFirst(extracted[techniques.DescriptionsField]),
+					"image":       utils.GetSafeFirst(extracted[techniques.ImagesField]),
 				},
 			})
 			return
 		}
-		logger.JsonLogger.Info(err1) // 未查到host对应的technique
+		log.Println(ansi.Color("[未查到host对应的technique]:", "blue"), err1) // 未查到host对应的technique
 
 		// 2.使用通用technique
 		extractor := extrator.NewExtractor(

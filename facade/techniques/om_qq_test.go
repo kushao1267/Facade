@@ -6,10 +6,10 @@ import (
 	"testing"
 )
 
-func TestToutiaoTechnique_Extract(t *testing.T) {
-	var technique ToutiaoTechnique
+func TestQQOMTechnique_Extract(t *testing.T) {
+	var technique QQOMTechnique
 
-	html := utils.GetHtml("https://www.toutiao.com/a6673091667941130756/")
+	html := utils.GetHtml("https://page.om.qq.com/page/OdcZGP3nLryW2tIbF8udTYrg0?source=omapp&appbar=omapp")
 
 	extracted := technique.Extract(html)
 	allEmpty := true
