@@ -1,0 +1,21 @@
+version: "3"
+services:
+
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    environment:
+      - REDIS_PASSWORD=redispwd
+    restart: always
+
+  api:
+    image: facade
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - redis
+    ports:
+      - 8080:8080
+    entrypoint: go run ./example/main.go

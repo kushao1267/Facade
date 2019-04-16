@@ -50,7 +50,7 @@ func LinkPreview(c *gin.Context) {
 		host, err := utils.GetHostName(url)
 		tech, err1 := techniques.GetTechnique(host)
 		if err == nil && err1 == nil {
-			extractor := extrator.NewExtractor(
+			extractor := extractors.NewExtractor(
 				false,
 				tech,
 				techniques.HeadTagsTechnique{"HeadTagsTechnique"},
@@ -73,7 +73,7 @@ func LinkPreview(c *gin.Context) {
 		log.Println(ansi.Color("[未查到host对应的technique]:", "blue"), err1) // 未查到host对应的technique
 
 		// 2.使用通用technique
-		extractor := extrator.NewExtractor(
+		extractor := extractors.NewExtractor(
 			false,
 			techniques.HeadTagsTechnique{"HeadTagsTechnique"},
 			techniques.HTML5SemanticTagsTechnique{"HTML5SemanticTagsTechnique"},
