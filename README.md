@@ -1,5 +1,11 @@
 ## Facade
 
+![GitHub](https://img.shields.io/github/license/kushao1267/facade.svg)
+![GitHub repo size](https://img.shields.io/github/repo-size/kushao1267/facade.svg)
+![AppVeyor](https://img.shields.io/appveyor/ci/kushao1267/facade.svg)
+![Codecov](https://img.shields.io/codecov/c/github/kushao1267/facade.svg)
+
+
 ## Features
 
 Facade是一个全网通用的链接预览服务，它的功能如下:
