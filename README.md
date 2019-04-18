@@ -35,14 +35,10 @@ Facade是一个全网通用的链接预览服务，它的功能如下:
 数据库封装模块，目前只使用redis，用的是go-redis/redis库, [详见](https://github.com/go-redis/redis)
 
 * extractors模块
-使用者能够自定义extractor，来组合使用已有的technique，也可以调节使用technique的优先级，从而保证输出预览信息的完善和精确。
-例如: WeiboTechnique -> HeadTagsTechnique -> SemanticTagsTechnique 的调用优先级，能够在抓取weibo feed预览信息失败时，调用相应
-的通用technique来兜底。
+使用者能够自定义extractor，来组合使用已有的technique，也可以调节使用technique的优先级，从而保证输出预览信息的完善和精确。例如使用technique调用链: WeiboTechnique -> HeadTagsTechnique -> SemanticTagsTechnique (指定->为调用优先级)，能够在抓取weibo feed链接的预览信息失败时，调用相应的通用technique来兜底。
 
 * techniques模块
-techniques中每个technique都提供了针对特定网站的多字段提取方法；
-此外，还有通用的common technique，在其他特定technique提取信息失败时，可以用来兜底。
-使用者能够加入更多网站的technique，欢迎提PR :)
+techniques中每个technique都提供了针对特定网站的多字段提取方法。此外还提供了通用的technique: HeadTagsTechnique、HTML5SemanticTagsTechnique、SemanticTagsTechnique，在其他特定technique提取信息失败时，可以用来兜底。使用者能够加入更多网站的technique，来完善该项目，欢迎提PR :)
 
 * utils
 工具模块，包含加密相关工具，http网络请求工具，图片解析工具，时间相关工具等方法
