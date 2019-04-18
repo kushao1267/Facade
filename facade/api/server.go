@@ -16,12 +16,15 @@ const (
 func Server(addr ...string) {
 	r := gin.New()
 	r.Use(gin.Logger())
-	r.Use(gin.Recovery())  // Use中間件
+	r.Use(gin.Recovery()) // Use中間件
 
 	if os.Getenv("APP_ENV") == ReleaseENV {
 		gin.SetMode(gin.ReleaseMode)
-	} else {
+	} else if os.Getenv("APP_ENV") == TestENV {
 		gin.SetMode(gin.TestMode)
+	} else {
+		gin.SetMode(gin.DebugMode)
+
 	}
 
 	r.GET("/ping", Ping)

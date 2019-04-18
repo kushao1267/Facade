@@ -6,10 +6,10 @@ import (
 	"testing"
 )
 
-func TestWeChatTechnique_Extract(t *testing.T) {
-	var technique WeChatTechnique
+func TestWeiboTechnique_Extract(t *testing.T) {
+	var technique WeiboTechnique
 
-	html := utils.GetHtml("https://mp.weixin.qq.com/s/VRzeIxFO_sHTOHAyZRX7xw")
+	html := utils.GetHtml("https://m.weibo.cn/5187664653/4354456894352205")
 
 	extracted := technique.Extract(html)
 	allEmpty := true

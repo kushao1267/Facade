@@ -9,7 +9,7 @@ build:
 	docker build -t facade .
 
 build-example:
-	GOOS=${GOOS} ${GO} build -o ${APP_NAME} examples/main.go
+	GOOS=${GOOS} ${GO} build -o ${APP_NAME} -mod=vendor examples/main.go
 
 run:
 	# 运行:

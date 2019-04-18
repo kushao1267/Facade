@@ -2,12 +2,12 @@ package utils
 
 import (
 	"encoding/json"
+	"github.com/denisbrodbeck/striphtmltags"
 	"github.com/levigross/grequests"
 	"github.com/mgutz/ansi"
 	"log"
 	"net/url"
 	"path"
-	"regexp"
 	"time"
 )
 
@@ -35,7 +35,7 @@ func GetJson(url string, v interface{}) {
 	resp, err := grequests.Get(url, &grequests.RequestOptions{
 		RequestTimeout: requestImgTimeout,
 	})
-	if err!=nil{
+	if err != nil {
 		log.Println(ansi.Color("[GetJson]:", "red"), err)
 	}
 	if err := json.Unmarshal(resp.Bytes(), &v); err != nil {
@@ -47,12 +47,11 @@ func GetJson(url string, v interface{}) {
 func GetHtml(url string) string {
 	resp, err := grequests.Get(url, &grequests.RequestOptions{
 		RequestTimeout: requestUrlTimeout * time.Second,
-		Headers:  map[string]string{
-			"user-agent":
-				"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKi" +
+		Headers: map[string]string{
+			"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKi" +
 				"t/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15"},
 	})
-	if err!=nil{
+	if err != nil {
 		log.Println(ansi.Color("[GetHtml]:", "red"), err)
 	}
 
@@ -61,6 +60,5 @@ func GetHtml(url string) string {
 
 // CleanHtmlTags 简单地处理html标签
 func CleanHtmlTags(raw string) string {
-	cleaner := regexp.MustCompile("<.*?>")
-	return cleaner.ReplaceAllString(raw, "")
+	return striphtmltags.StripTags(raw)
 }

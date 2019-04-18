@@ -3,7 +3,7 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/kushao1267/facade/facade/db"
-	"github.com/kushao1267/facade/facade/extrator"
+	"github.com/kushao1267/facade/facade/extractors"
 	"github.com/kushao1267/facade/facade/techniques"
 	"github.com/kushao1267/facade/facade/utils"
 	"github.com/mgutz/ansi"
@@ -53,9 +53,6 @@ func LinkPreview(c *gin.Context) {
 			extractor := extractors.NewExtractor(
 				false,
 				tech,
-				techniques.HeadTagsTechnique{"HeadTagsTechnique"},
-				techniques.HTML5SemanticTagsTechnique{"HTML5SemanticTagsTechniques"},
-				techniques.SemanticTagsTechnique{"SemanticTagsTechnique"},
 			)
 			extracted := extractor.Extract(utils.GetHtml(url), url)
 			// test print

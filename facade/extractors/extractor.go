@@ -123,6 +123,10 @@ func (d Extractor) runTechnique(technique techniques.Technique, html string) tec
 // cleanUpText Cleanup text values like titles or descriptions.
 func (d Extractor) cleanUpText(value, mark string) string {
 	text := strings.TrimSpace(value)
+
+	// 去除标签
+	text = utils.CleanHtmlTags(text)
+
 	// 长度限制
 	if len(text) > 125 {
 		text = text[:125] + "..."
@@ -175,27 +179,24 @@ func (d Extractor) cleanUp(results techniques.DirtyExtracted, technique techniqu
 	}
 
 	for dataType, dataValues := range results {
-		var values []string
+
 		if utils.StringInSlice(dataType, d.textTypes) {
 			for _, dataValue := range dataValues {
 				if dataValue != "" {
-					values = append(values, d.cleanUpText(dataValue, mark))
+					cleanedText := d.cleanUpText(dataValue, mark)
+					cleanedResults[dataType] = append(cleanedResults[dataType], cleanedText)
 				}
 			}
 		} else if utils.StringInSlice(dataType, d.urlTypes) {
 			for _, dataValue := range dataValues {
-				values = append(values, d.cleanUpUrl(dataValue, sourceUrl, mark))
+				cleanedUrl := d.cleanUpUrl(dataValue, sourceUrl, mark)
+				cleanedResults[dataType] = append(cleanedResults[dataType], cleanedUrl)
 			}
 		} else if d.strictTypes {
 			continue
 		}
-
-		for _, dataValue := range dataValues {
-			if !utils.StringInSlice(dataValue, cleanedResults[dataType]) {
-				cleanedResults[dataType] = append(cleanedResults[dataType], dataValue)
-			}
-		}
-
+		// 去重
+		cleanedResults[dataType] = utils.RemoveDuplicateString(cleanedResults[dataType])
 	}
 	return cleanedResults
 }

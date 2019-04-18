@@ -12,6 +12,19 @@ func StringInSlice(target string, list []string) bool {
 	return false
 }
 
+// remove duplicates
+func RemoveDuplicateString(intSlice []string) []string {
+	keys := make(map[string]bool)
+	list := []string{}
+	for _, entry := range intSlice {
+		if _, value := keys[entry]; !value {
+			keys[entry] = true
+			list = append(list, entry)
+		}
+	}
+	return list
+}
+
 // RemoveEmptyStringInSlice 从slice中滤掉空字符串
 func RemoveEmptyStringInSlice(list []string) []string {
 	var resultList []string
