@@ -20,7 +20,9 @@ Facade是一个全网通用的链接预览服务，它的功能如下:
 
 ## Installation
 
-`go get -u github.com/kushao1267/facade`
+```
+go get -u github.com/kushao1267/facade
+```
 
 
 ## Module
