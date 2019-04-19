@@ -42,9 +42,12 @@ func GetTechnique(host string) (Technique, error) {
 	techMap := map[string]Technique{
 		"mp.weixin.qq.com": WeChatTechnique{"WeChatTechnique"},
 		"www.toutiao.com":  ToutiaoTechnique{"ToutiaoTechnique"},
+		"m.zjbyte.com":  ToutiaoTechnique{"ToutiaoTechnique"},
 		"page.om.qq.com":   QQOMTechnique{"QQOMTechnique"},
 		"m.weibo.cn":       WeiboTechnique{"WeiboTechnique"},
+		"media.weibo.cn":       WeiboArticleTechnique{"WeiboArticleTechnique"},
 	}
+
 	if val, ok := techMap[host]; ok {
 		return val, nil
 	}
