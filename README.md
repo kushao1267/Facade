@@ -44,9 +44,30 @@ techniques中每个technique都提供了针对特定网站的多字段提取方�
 工具模块，包含加密相关工具，http网络请求工具，图片解析工具，时间相关工具等方法
 
 
-## Example
-见example文件夹
+## Usage
 
+1.复制环境变量文件.env，环境变量视情况自行更改
+```
+$ cp .env.tpl .env
+```
+
+2.运行api示例，将在本地8080端口起一个API网关服务
+```
+$ make run-example
+```
+
+3.调用预览接口
+```
+$ curl http://127.0.0.1:8080/link_preview -F url=https://media.weibo.cn/article\?id\=2309404362621859024154\&jumpfrom\=weibocom
+
+{"code":1,"data":{"description":"当你远远凝视深渊时，深渊也在凝视你。","image":"https://wx4.sinaimg.cn/orj480/77e0a903ly8g1kiedveqsj20u00u0787.jpg","title":"会好的 心灵的感冒"},"msg":"success"}%
+```
+
+## Test
+目前只测试所有technique
+```
+$ make test
+```
 
 ## LICENSE
 [MIT License](https://github.com/kushao1267/facade/blob/master/LICENSE)

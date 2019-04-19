@@ -8,4 +8,6 @@ Makefile
 .env
 venv
 
+.env.tpl
+
 facade_server
