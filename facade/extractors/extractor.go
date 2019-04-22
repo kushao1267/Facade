@@ -2,8 +2,8 @@ package extractors
 
 import "fmt"
 import (
-	"github.com/kushao1267/facade/facade/techniques"
-	"github.com/kushao1267/facade/facade/utils"
+	"github.com/kushao1267/Facade/facade/techniques"
+	"github.com/kushao1267/Facade/facade/utils"
 	"strings"
 )
 

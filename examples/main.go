@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/kushao1267/facade/facade/api"
+	"github.com/kushao1267/Facade/facade/api"
 )
 
 func main()  {

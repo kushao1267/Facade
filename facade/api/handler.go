@@ -2,10 +2,10 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/kushao1267/facade/facade/db"
-	"github.com/kushao1267/facade/facade/extractors"
-	"github.com/kushao1267/facade/facade/techniques"
-	"github.com/kushao1267/facade/facade/utils"
+	"github.com/kushao1267/Facade/facade/db"
+	"github.com/kushao1267/Facade/facade/extractors"
+	"github.com/kushao1267/Facade/facade/techniques"
+	"github.com/kushao1267/Facade/facade/utils"
 	"github.com/mgutz/ansi"
 	"log"
 	"net/http"

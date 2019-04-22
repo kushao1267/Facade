@@ -1,6 +1,4 @@
-module github.com/kushao1267/facade
-
-go 1.12
+module github.com/kushao1267/Facade
 
 require (
 	github.com/BurntSushi/toml v0.3.1

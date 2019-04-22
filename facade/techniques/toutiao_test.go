@@ -1,7 +1,7 @@
 package techniques
 
 import (
-	"github.com/kushao1267/facade/facade/utils"
+	"github.com/kushao1267/Facade/facade/utils"
 	"log"
 	"testing"
 )

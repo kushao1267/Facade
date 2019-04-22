@@ -1,8 +1,8 @@
 package extractors
 
 import (
-	"github.com/kushao1267/facade/facade/config"
-	"github.com/kushao1267/facade/facade/utils"
+	"github.com/kushao1267/Facade/facade/config"
+	"github.com/kushao1267/Facade/facade/utils"
 )
 
 const (

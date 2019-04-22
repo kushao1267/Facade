@@ -2,8 +2,8 @@ package db
 
 import (
 	"github.com/go-redis/redis"
-	"github.com/kushao1267/facade/facade/config"
-	"github.com/kushao1267/facade/facade/utils"
+	"github.com/kushao1267/Facade/facade/config"
+	"github.com/kushao1267/Facade/facade/utils"
 	"github.com/mgutz/ansi"
 	"log"
 	"time"
