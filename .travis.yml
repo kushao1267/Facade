@@ -15,7 +15,7 @@ install: true
 
 script:
 - go test -mod=vendor -race -coverprofile=coverage.txt -covermode=atomic ./...
-- go -mod=vendor build
+- go build -mod=vendor
 - go test -v -mod=vendor facade/techniques/*
 
 after_success:
