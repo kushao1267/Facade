@@ -25,7 +25,7 @@ func (e Extracted) Represent() []string {
 			if count-1 > 0 {
 				detailStr = append(
 					detailStr,
-					fmt.Sprintf("(%s: '%s', %s more)", name, value[:maxShown], count-1),
+					fmt.Sprintf("(%s: '%s', %s more)", name, value[:maxShown], string(count-1)),
 				)
 			} else {
 				detailStr = append(

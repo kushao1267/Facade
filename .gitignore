@@ -1,13 +1,15 @@
 .DS_Store
 .idea
 Makefile
+
 *~
 .codeintel
 *.log
 .vscode
 .env
 venv
-
 .env.tpl
+
+coverage.txt
 
 facade_server
