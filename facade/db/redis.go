@@ -1,12 +1,14 @@
 package db
 
 import (
+	"log"
+	"time"
+
 	"github.com/go-redis/redis"
 	"github.com/kushao1267/Facade/facade/config"
 	"github.com/kushao1267/Facade/facade/utils"
 	"github.com/mgutz/ansi"
-	"log"
-	"time"
+	"errors"
 )
 
 var LinkPreviewService *LinkPreview
@@ -20,6 +22,7 @@ func init() {
 }
 
 func NewRedis(c config.Redis) *redis.Client {
+	log.Println(c)
 	db := redis.NewClient(&redis.Options{
 		Addr:        c.Addr,
 		Password:    c.Password,
@@ -29,7 +32,7 @@ func NewRedis(c config.Redis) *redis.Client {
 	})
 
 	if err := db.Ping().Err(); err != nil {
-		log.Println(ansi.Color("[初始化redis失败]:","red"), err)
+		log.Println(ansi.Color("[初始化redis失败]:", "red"), err)
 	}
 	return db
 }
@@ -63,25 +66,25 @@ func (l LinkPreview) GetKey(url string) string {
 	return "link_preview_cache:" + hash
 }
 
-func (l LinkPreview) GetValues(url string, fields ...string) []string {
+func (l LinkPreview) GetValues(url string, fields ...string) (error, []string) {
 	key := l.GetKey(url)
 	s := make([]string, len(fields))
+	var empty []string
 
 	val, err := redisdb.HMGet(key, fields...).Result()
 
-	if err != nil {
-		log.Println(ansi.Color("[link_preview_cache:GetValues]:","red"), err)
-		return []string{}
-	} else if err == redis.Nil { // key does not exists
-		for i, _ := range fields {
-			s[i] = ""
-		}
-	} else {
-		for i, _ := range fields {
+	if err !=nil{
+		return err, empty
+	}
+	for i, _ := range fields {
+		if val[i] != nil {
 			s[i] = val[i].(string)
+		} else {
+			return errors.New("not find"), empty
 		}
 	}
-	return s
+
+	return nil, s
 }
 
 func (l LinkPreview) SetValues(url string, fields map[string]interface{}) {
@@ -91,7 +94,7 @@ func (l LinkPreview) SetValues(url string, fields map[string]interface{}) {
 		panic(err)
 	}
 
-	if err1 := redisdb.Expire(key, config.AllConf.Expire).Err(); err1 != nil {
+	if err1 := redisdb.Expire(key, config.AllConf.Redis["master"].Expire).Err(); err1 != nil {
 		panic(err1)
 	}
 }

@@ -1,14 +1,5 @@
 version: "3"
 services:
-
-  redis:
-    image: redis:latest
-    ports:
-      - 6379:6379
-    environment:
-      - REDIS_PASSWORD=redispwd
-    restart: always
-
   api:
     image: facade
     build:
@@ -16,6 +7,22 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - redis
+    volumes:
+          - ./bin:/opt/app/bin
     ports:
       - 8080:8080
-    entrypoint: go run ./example/main.go
+    networks: # Networks to join (Services on the same network can communicate with each other using their name)
+      - backend
+    command: ./bin/facade_server
+
+  redis:
+    container_name: redis
+    image: redis:4-alpine
+    networks:
+      - backend
+    command: ["redis-server", "--appendonly", "yes"]
+
+    
+# Networks to be created to facilitate communication between containers
+networks:
+  backend:   

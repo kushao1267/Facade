@@ -1,8 +1,9 @@
 package api
 
 import (
-	"github.com/gin-gonic/gin"
 	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 const (
@@ -18,9 +19,9 @@ func Server(addr ...string) {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery()) // Use中間件
 
-	if os.Getenv("APP_ENV") == ReleaseENV {
+	if os.Getenv("GIN_MODE") == ReleaseENV {
 		gin.SetMode(gin.ReleaseMode)
-	} else if os.Getenv("APP_ENV") == TestENV {
+	} else if os.Getenv("GIN_MODE") == TestENV {
 		gin.SetMode(gin.TestMode)
 	} else {
 		gin.SetMode(gin.DebugMode)

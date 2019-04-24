@@ -1,15 +1,22 @@
-FROM golang:1.12.1-stretch
+FROM alpine:3.6
 
-MAINTAINER jianliu001922@gmail.com
+ENV app_name facade_server
+ENV app_dir /opt/app/
 
-ENV APP_LOG_PATH /data/app/log/
-ENV APP_NAME facade_server
-ENV APP_ENV test
+ARG port=8080
 
-WORKDIR /go/
-VOLUME ${APP_LOG_PATH}
+RUN mkdir -p app_dir
+WORKDIR ${app_dir}
 
-RUN echo "PS1=$" >> ~/.bashrc
-COPY ${APP_NAME} .
+COPY Makefile .
+COPY config.toml .
+COPY .env .
 
-CMD ./${APP_NAME}
+RUN echo http://mirrors.aliyun.com/alpine/v3.6/main > /etc/apk/repositories \
+    && echo http://mirrors.aliyun.com/alpine/v3.6/main >> /etc/apk/repositories \
+    && apk add --no-cache make \
+    && apk add --no-cache ca-certificates
+
+EXPOSE $port
+
+CMD ./bin/${app_name}

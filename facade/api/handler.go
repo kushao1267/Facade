@@ -1,15 +1,16 @@
 package api
 
 import (
+	"log"
+	"net/http"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/kushao1267/Facade/facade/db"
 	"github.com/kushao1267/Facade/facade/extractors"
 	"github.com/kushao1267/Facade/facade/techniques"
 	"github.com/kushao1267/Facade/facade/utils"
 	"github.com/mgutz/ansi"
-	"log"
-	"net/http"
-	"strings"
 )
 
 // Ping: test whether if the API server is running
@@ -27,13 +28,13 @@ func LinkPreview(c *gin.Context) {
 
 	if strings.HasPrefix(url, "https") || strings.HasPrefix(url, "http") {
 		// 从缓存中取结果
-		result := db.LinkPreviewService.GetValues(
+		err, result := db.LinkPreviewService.GetValues(
 			url,
 			db.LinkPreviewService.Title,
 			db.LinkPreviewService.Description,
 			db.LinkPreviewService.Image)
 
-		if len(result) > 0 { // 缓存存在
+		if err == nil { // 缓存存在
 			c.JSON(http.StatusOK, gin.H{
 				"code": SuccessCode,
 				"msg":  "success",

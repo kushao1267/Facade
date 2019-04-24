@@ -1,9 +1,10 @@
 package config
 
 import (
-	"github.com/BurntSushi/toml"
 	"log"
 	"time"
+
+	"github.com/BurntSushi/toml"
 )
 
 type Redis struct {
@@ -12,26 +13,31 @@ type Redis struct {
 	DB          int
 	PoolSize    int
 	PoolTimeout int
-}
 
-type DefaultItem struct {
-	Title string
-	Image string
-	ForceDefault bool
+	Expire time.Duration
 }
 
 type Config struct {
 	Title     string
-	Expire    time.Duration
 	Redis     map[string]Redis `toml:"redis"`
 	ReturnMap map[string]DefaultItem
+}
+
+type DefaultItem struct {
+	Title        string
+	Image        string
+	ForceDefault bool
 }
 
 // AllConf 全局配置
 var AllConf = &Config{}
 
-func init() {
-	if _, err := toml.DecodeFile("./config.toml", AllConf); err != nil {
-		log.Fatal("加载配置失败", err)
+func (c *Config) Read() {
+	if _, err := toml.DecodeFile("config.toml", &c); err != nil {
+		log.Fatal(err)
 	}
+}
+
+func init() {
+	AllConf.Read()
 }

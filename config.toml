@@ -3,9 +3,9 @@ title = "全局配置"
 [redis]
     [redis.master]
     addr = "redis:6379"
-    password = "redispwd"
+    password = ""
     db = 1
     poolSize = 10
     poolTimeout = 30
 
-expire=2
+    expire=2
