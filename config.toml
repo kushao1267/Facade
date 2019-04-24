@@ -8,4 +8,4 @@ title = "全局配置"
     poolSize = 10
     poolTimeout = 30
 
-    expire=2
+    expire=60

@@ -48,10 +48,11 @@ techniques中每个technique都提供了针对特定网站的多字段提取方�
 $ cp .env.tpl .env
 ```
 
-2.运行api示例，将在本地8080端口起一个API网关服务
+2.使用docker-compose一键启动API和Redis缓存服务，只需运行：
 ```
-$ make run-example
+make compose
 ```
+仅使用alpine镜像，严格控制制作的镜像大小在10M内.可以在docker-compose.yml内设置Redis相关配置.
 
 3.调用预览接口
 ```
@@ -60,11 +61,15 @@ $ curl http://127.0.0.1:8080/link_preview -F url=https://media.weibo.cn/article\
 {"code":1,"data":{"description":"当你远远凝视深渊时，深渊也在凝视你。","image":"https://wx4.sinaimg.cn/orj480/77e0a903ly8g1kiedveqsj20u00u0787.jpg","title":"会好的 心灵的感冒"},"msg":"success"}%
 ```
 
+4.更多使用参见Makefile
+
+
 ## Test
 目前只测试所有technique
 ```
 $ make test
 ```
+
 
 ## LICENSE
 [MIT License](https://github.com/kushao1267/facade/blob/master/LICENSE)

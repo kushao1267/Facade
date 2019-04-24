@@ -8,7 +8,6 @@ Makefile
 .vscode
 .env
 venv
-.env.tpl
 
 coverage.txt
 
