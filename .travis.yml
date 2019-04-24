@@ -14,9 +14,9 @@ sudo: false
 install: true
 
 script:
-- go test -mod=vendor -race -coverprofile=coverage.txt -covermode=atomic ./...
-- go build -mod=vendor
-- go test -v -mod=vendor facade/techniques/*
+- go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+- go build
+- go test -v facade/techniques/*
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
