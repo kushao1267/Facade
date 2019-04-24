@@ -65,7 +65,10 @@ $ curl http://127.0.0.1:8080/link_preview -F url=https://media.weibo.cn/article\
 {"code":1,"data":{"description":"当你远远凝视深渊时，深渊也在凝视你。","image":"https://wx4.sinaimg.cn/orj480/77e0a903ly8g1kiedveqsj20u00u0787.jpg","title":"会好的 心灵的感冒"},"msg":"success"}%
 ```
 
-4.更多使用参见Makefile
+4.调用接口console打印出详细的technique调用日志，并通过颜色区分
+![api-log](https://github.com/kushao1267/Facade/blob/master/gin_api_log.jpg)
+
+5.更多使用参见Makefile
 
 
 ## Test

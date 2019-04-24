@@ -73,7 +73,7 @@ func (l LinkPreview) GetValues(url string, fields ...string) (error, []string) {
 
 	val, err := redisdb.HMGet(key, fields...).Result()
 
-	if err !=nil{
+	if err != nil {
 		return err, empty
 	}
 	for i, _ := range fields {

@@ -27,65 +27,56 @@ func LinkPreview(c *gin.Context) {
 	url := c.Request.FormValue("url")
 
 	if strings.HasPrefix(url, "https") || strings.HasPrefix(url, "http") {
+		var title, description, image string
 		// 从缓存中取结果
 		err, result := db.LinkPreviewService.GetValues(
 			url,
 			db.LinkPreviewService.Title,
 			db.LinkPreviewService.Description,
 			db.LinkPreviewService.Image)
-
 		if err == nil { // 缓存存在
-			c.JSON(http.StatusOK, gin.H{
-				"code": SuccessCode,
-				"msg":  "success",
-				"data": ReturnData{
-					"title":       result[0],
-					"description": result[1],
-					"image":       result[2],
-				},
-			})
-			return
+			title, description, image = result[0], result[1], result[2]
 		}
 		// 抓取
 		// 1.根据域名判断需要使用的technique
 		host, err := utils.GetHostName(url)
 		tech, err1 := techniques.GetTechnique(host)
 		if err == nil && err1 == nil {
+			log.Println(ansi.Color("[使用technique]:", "green"), tech.GetName()) // 未查到host对应的technique
+
 			extractor := extractors.NewExtractor(
 				false,
 				tech,
 			)
 			extracted := extractor.Extract(utils.GetHtml(url), url)
 			// test print
-			c.JSON(http.StatusOK, gin.H{
-				"code": SuccessCode,
-				"msg":  "success",
-				"data": ReturnData{
-					"title":       utils.GetSafeFirst(extracted[techniques.TitlesField]),
-					"description": utils.GetSafeFirst(extracted[techniques.DescriptionsField]),
-					"image":       utils.GetSafeFirst(extracted[techniques.ImagesField]),
-				},
-			})
-			return
-		}
-		log.Println(ansi.Color("[未查到host对应的technique]:", "blue"), err1) // 未查到host对应的technique
+			title, description, image = utils.GetSafeFirst(extracted[techniques.TitlesField]),
+				utils.GetSafeFirst(extracted[techniques.DescriptionsField]),
+				utils.GetSafeFirst(extracted[techniques.ImagesField])
+		}else{
 
-		// 2.使用通用technique
-		extractor := extractors.NewExtractor(
-			false,
-			techniques.HeadTagsTechnique{"HeadTagsTechnique"},
-			techniques.HTML5SemanticTagsTechnique{"HTML5SemanticTagsTechnique"},
-			techniques.SemanticTagsTechnique{"SemanticTagsTechnique"},
-		)
-		extracted := extractor.Extract(utils.GetHtml(url), url)
-		// test print
+			log.Println(ansi.Color("[未查到host对应的technique]:", "blue"), err1) // 未查到host对应的technique
+
+			// 2.使用通用technique
+			extractor := extractors.NewExtractor(
+				false,
+				techniques.HeadTagsTechnique{"HeadTagsTechnique"},
+				techniques.HTML5SemanticTagsTechnique{"HTML5SemanticTagsTechnique"},
+				techniques.SemanticTagsTechnique{"SemanticTagsTechnique"},
+			)
+			extracted := extractor.Extract(utils.GetHtml(url), url)
+			// test print
+			title, description, image =utils.GetSafeFirst(extracted[techniques.TitlesField]),
+				utils.GetSafeFirst(extracted[techniques.DescriptionsField]),
+				utils.GetSafeFirst(extracted[techniques.ImagesField])
+		}
 		c.JSON(http.StatusOK, gin.H{
 			"code": SuccessCode,
 			"msg":  "success",
 			"data": ReturnData{
-				"title":       utils.GetSafeFirst(extracted[techniques.TitlesField]),
-				"description": utils.GetSafeFirst(extracted[techniques.DescriptionsField]),
-				"image":       utils.GetSafeFirst(extracted[techniques.ImagesField]),
+				"title":       title,
+				"description": description,
+				"image":       image,
 			},
 		})
 		return
@@ -94,6 +85,9 @@ func LinkPreview(c *gin.Context) {
 	c.JSON(http.StatusBadRequest, gin.H{
 		"code": FailCode,
 		"msg":  "fail",
-		"data": url,
+		"data": ReturnData{
+			"request_url": url,
+		},
 	})
+	return
 }
