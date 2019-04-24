@@ -1,6 +1,6 @@
 include .env
 
-.PHONY: build-image compose build run exec tidy test dev clean
+.PHONY: build-image compose build exec tidy test clean
 
 build-image: build
 	# 构建项目镜像
@@ -11,17 +11,7 @@ compose: build
 	docker-compose up
 
 build:
-	GOOS=$(GOOS) $(GO) build -o ./bin/$(APP_NAME) main.go
-
-run:
-	# 运行:
-	docker run --rm -it -p 8080:8080 \
-		--name $(APP_NAME) \
-		-e "GIN_MODE=$(GIN_MODE)" \
-		-v "${PWD}/bin":$(WORK_DIR)/bin facade
-	
-
-dev: build run
+	GOOS=$(GOOS) $(GO) build -o ./bin/$(APP_NAME) -mod=vendor main.go
 
 exec:
 	# 进入容器:
@@ -29,11 +19,11 @@ exec:
 
 test:
 	# 运行测试
-	@go test -v ./facade/techniques/*
+	@$(GO) test -mod=vendor -v ./facade/techniques/*
 
 tidy:
-	go mod tidy
-	go mod vendor
+	$(GO) mod tidy
+	$(GO) mod vendor
 
 clean:
-	@ go clean && rm -rf ./bin
+	@$(GO) clean -mod=vendor && rm -rf ./bin

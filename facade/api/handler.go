@@ -26,23 +26,35 @@ type ReturnData map[string]string
 func LinkPreview(c *gin.Context) {
 	url := c.Request.FormValue("url")
 
-	if strings.HasPrefix(url, "https") || strings.HasPrefix(url, "http") {
-		var title, description, image string
-		// 从缓存中取结果
-		err, result := db.LinkPreviewService.GetValues(
-			url,
-			db.LinkPreviewService.Title,
-			db.LinkPreviewService.Description,
-			db.LinkPreviewService.Image)
-		if err == nil { // 缓存存在
-			title, description, image = result[0], result[1], result[2]
-		}
-		// 抓取
+	if !strings.HasPrefix(url, "https") && !strings.HasPrefix(url, "http") {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code": FailCode,
+			"msg":  "fail",
+			"data": ReturnData{
+				"request_url": url,
+			},
+		})
+		return
+	}
+
+	var title, description, image string
+	// 从缓存中取结果
+	err, result := db.LinkPreviewService.GetValues(
+		url,
+		db.LinkPreviewService.Title,
+		db.LinkPreviewService.Description,
+		db.LinkPreviewService.Image)
+
+	// 缓存存在
+	if err == nil {
+		title, description, image = result[0], result[1], result[2]
+	}else {
+		// 缓存不存在
 		// 1.根据域名判断需要使用的technique
 		host, err := utils.GetHostName(url)
 		tech, err1 := techniques.GetTechnique(host)
 		if err == nil && err1 == nil {
-			log.Println(ansi.Color("[使用technique]:", "green"), tech.GetName()) // 未查到host对应的technique
+			log.Println(ansi.Color("[使用technique]:", "green"), tech.GetName()) // 查到host对应的technique
 
 			extractor := extractors.NewExtractor(
 				false,
@@ -53,8 +65,7 @@ func LinkPreview(c *gin.Context) {
 			title, description, image = utils.GetSafeFirst(extracted[techniques.TitlesField]),
 				utils.GetSafeFirst(extracted[techniques.DescriptionsField]),
 				utils.GetSafeFirst(extracted[techniques.ImagesField])
-		}else{
-
+		} else {
 			log.Println(ansi.Color("[未查到host对应的technique]:", "blue"), err1) // 未查到host对应的technique
 
 			// 2.使用通用technique
@@ -66,28 +77,28 @@ func LinkPreview(c *gin.Context) {
 			)
 			extracted := extractor.Extract(utils.GetHtml(url), url)
 			// test print
-			title, description, image =utils.GetSafeFirst(extracted[techniques.TitlesField]),
+			title, description, image = utils.GetSafeFirst(extracted[techniques.TitlesField]),
 				utils.GetSafeFirst(extracted[techniques.DescriptionsField]),
 				utils.GetSafeFirst(extracted[techniques.ImagesField])
 		}
-		c.JSON(http.StatusOK, gin.H{
-			"code": SuccessCode,
-			"msg":  "success",
-			"data": ReturnData{
-				"title":       title,
-				"description": description,
-				"image":       image,
-			},
-		})
-		return
 	}
-
-	c.JSON(http.StatusBadRequest, gin.H{
-		"code": FailCode,
-		"msg":  "fail",
+	// 缓存结果
+	db.LinkPreviewService.SetValues(url,
+		map[string]interface{}{
+		"title":       title,
+		"description": description,
+		"image":       image,
+	})
+	// 返回
+	c.JSON(http.StatusOK, gin.H{
+		"code": SuccessCode,
+		"msg":  "success",
 		"data": ReturnData{
-			"request_url": url,
+			"title":       title,
+			"description": description,
+			"image":       image,
 		},
 	})
 	return
 }
+
