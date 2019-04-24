@@ -1,4 +1,8 @@
-## Facade  ![GitHub](https://img.shields.io/github/license/kushao1267/facade.svg)![GitHub repo size](https://img.shields.io/github/repo-size/kushao1267/facade.svg)![Build](https://travis-ci.org/kushao1267/Facade.svg?branch=master)![Codecov](https://img.shields.io/codecov/c/github/kushao1267/facade.svg)
+## Facade
+![GitHub](https://img.shields.io/github/license/kushao1267/facade.svg)
+![GitHub repo size](https://img.shields.io/github/repo-size/kushao1267/facade.svg)
+![Build](https://travis-ci.org/kushao1267/Facade.svg?branch=master)
+![Codecov](https://img.shields.io/codecov/c/github/kushao1267/facade.svg)
 
 
 ## Features
