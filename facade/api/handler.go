@@ -113,6 +113,5 @@ func LinkPreview(c *gin.Context) {
 			"image":       image,
 		},
 	})
-	return
 }
 
