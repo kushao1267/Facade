@@ -14,7 +14,7 @@ sudo: false
 install: true
 
 script:
-- go build
+- go build -mod=vendor
 - go test -v facade/techniques/*
 
 after_success:
