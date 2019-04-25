@@ -1,21 +1,30 @@
+dist: xenial
+
 language: go
 
 go:
-- 1.12.1
+- 1.12.x
+
+git:
+  depth: 1
 
 os:
 - linux
 - osx
 
+env:
+  - GO111MODULE=on
+  - GOFLAGS='-mod vendor'
+
 dist: trusty
 
-sudo: false
+notifications:
+  email: false
 
 install: true
 
 script:
-- go build -mod=vendor
-- go test -v facade/techniques/*
+- go test -v -race facade/techniques/*
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
