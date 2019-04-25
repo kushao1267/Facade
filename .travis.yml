@@ -14,7 +14,6 @@ os:
 
 env:
   - GO111MODULE=on
-  - GOFLAGS='-mod vendor'
 
 dist: trusty
 
