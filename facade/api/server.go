@@ -30,6 +30,7 @@ func Server(addr ...string) {
 
 	r.GET("/ping", Ping)
 	r.POST("/link_preview", LinkPreview)
+	r.POST("/del_cache", DelCache)
 
 	r.Run(addr...)
 }

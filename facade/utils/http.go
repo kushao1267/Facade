@@ -11,7 +11,10 @@ import (
 	"time"
 )
 
-const requestUrlTimeout = 6
+const (
+	requestUrlTimeout = 6
+	userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15"
+)
 
 func GetComponent(s string) (*url.URL, error) {
 	u, err := url.Parse(s)
@@ -34,6 +37,7 @@ func UrlJoin(source, target string) string {
 func GetJson(url string, v interface{}) {
 	resp, err := grequests.Get(url, &grequests.RequestOptions{
 		RequestTimeout: requestImgTimeout,
+		UserAgent: userAgent,
 	})
 	if err != nil {
 		log.Println(ansi.Color("[GetJson]:", "red"), err)
@@ -47,9 +51,7 @@ func GetJson(url string, v interface{}) {
 func GetHtml(url string) string {
 	resp, err := grequests.Get(url, &grequests.RequestOptions{
 		RequestTimeout: requestUrlTimeout * time.Second,
-		Headers: map[string]string{
-			"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKi" +
-				"t/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15"},
+		UserAgent: userAgent,
 	})
 	if err != nil {
 		log.Println(ansi.Color("[GetHtml]:", "red"), err)

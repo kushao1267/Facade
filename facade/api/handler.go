@@ -22,6 +22,17 @@ func Ping(c *gin.Context) {
 
 type ReturnData map[string]string
 
+func DelCache(c *gin.Context){
+	url := c.Request.FormValue("url")
+	db.LinkPreviewService.Delete(url)
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": SuccessCode,
+		"msg":  "success",
+	})
+	return
+}
+
 // LinkPreview: link preview API
 func LinkPreview(c *gin.Context) {
 	url := c.Request.FormValue("url")
@@ -54,6 +65,7 @@ func LinkPreview(c *gin.Context) {
 		// 1.根据域名判断需要使用的technique
 		host, err := utils.GetHostName(url)
 		tech, err1 := techniques.GetTechnique(host)
+
 		if err == nil && err1 == nil {
 			log.Println(ansi.Color("[使用technique]:", "green"), tech.GetName()) // 查到host对应的technique
 

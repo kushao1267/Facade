@@ -20,6 +20,7 @@ type Redis struct {
 type Config struct {
 	Title     string
 	Redis     Redis `toml:"redis"`
+	UserAgent string `toml:"user-agent"`
 	ReturnMap map[string]DefaultItem
 }
 

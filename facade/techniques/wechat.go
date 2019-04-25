@@ -26,12 +26,7 @@ func (t WeChatTechnique) Extract(html string) DirtyExtracted {
 		return extracted
 	}
 	jsCode := ""
-	doc.Find("script").Each(func(i int, selection *goquery.Selection) {
-		if i == 12 {
-			jsCode = selection.Text()
-		}
-	})
-
+	jsCode = doc.Find("script").Text()
 	/* 自定义提取信息 */
 	// title
 	titles := utils.MatchOneOf(jsCode, `msg_title = "(.+?)";`)
