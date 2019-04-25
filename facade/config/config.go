@@ -19,7 +19,7 @@ type Redis struct {
 
 type Config struct {
 	Title     string
-	Redis     map[string]Redis `toml:"redis"`
+	Redis     Redis `toml:"redis"`
 	ReturnMap map[string]DefaultItem
 }
 

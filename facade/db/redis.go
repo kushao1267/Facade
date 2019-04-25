@@ -18,7 +18,7 @@ var redisdb *redis.Client
 func init() {
 	LinkPreviewService = NewLinkPreview()
 
-	redisdb = NewRedis(config.AllConf.Redis["master"])
+	redisdb = NewRedis(config.AllConf.Redis)
 }
 
 func NewRedis(c config.Redis) *redis.Client {
@@ -91,11 +91,11 @@ func (l LinkPreview) SetValues(url string, fields map[string]interface{}) {
 	key := l.GetKey(url)
 
 	if err := redisdb.HMSet(key, fields); err != nil {
-		panic(err)
+		log.Println(err)
 	}
 
-	if err1 := redisdb.Expire(key, config.AllConf.Redis["master"].Expire).Err(); err1 != nil {
-		panic(err1)
+	if err1 := redisdb.Expire(key, config.AllConf.Redis.Expire * time.Second).Err(); err1 != nil {
+		log.Println(err1)
 	}
 }
 

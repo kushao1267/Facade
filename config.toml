@@ -1,7 +1,6 @@
 title = "全局配置"
 
 [redis]
-    [redis.master]
     addr = "redis:6379"
     password = ""
     db = 1

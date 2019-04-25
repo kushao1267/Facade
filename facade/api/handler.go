@@ -48,6 +48,7 @@ func LinkPreview(c *gin.Context) {
 	// 缓存存在
 	if err == nil {
 		title, description, image = result[0], result[1], result[2]
+		log.Println("取到缓存")
 	}else {
 		// 缓存不存在
 		// 1.根据域名判断需要使用的technique
@@ -81,14 +82,15 @@ func LinkPreview(c *gin.Context) {
 				utils.GetSafeFirst(extracted[techniques.DescriptionsField]),
 				utils.GetSafeFirst(extracted[techniques.ImagesField])
 		}
+
+		// 缓存结果
+		db.LinkPreviewService.SetValues(url,
+			map[string]interface{}{
+				"title":       title,
+				"description": description,
+				"image":       image,
+			})
 	}
-	// 缓存结果
-	db.LinkPreviewService.SetValues(url,
-		map[string]interface{}{
-		"title":       title,
-		"description": description,
-		"image":       image,
-	})
 	// 返回
 	c.JSON(http.StatusOK, gin.H{
 		"code": SuccessCode,
