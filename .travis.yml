@@ -14,7 +14,6 @@ sudo: false
 install: true
 
 script:
-- go test -race -coverprofile=coverage.txt -covermode=atomic ./...
 - go build
 - go test -v facade/techniques/*
 
