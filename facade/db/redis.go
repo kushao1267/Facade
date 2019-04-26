@@ -90,9 +90,7 @@ func (l LinkPreview) GetValues(url string, fields ...string) (error, []string) {
 func (l LinkPreview) SetValues(url string, fields map[string]interface{}) {
 	key := l.GetKey(url)
 
-	if err := redisdb.HMSet(key, fields); err != nil {
-		log.Println(err)
-	}
+	redisdb.HMSet(key, fields)
 
 	if err1 := redisdb.Expire(key, config.AllConf.Redis.Expire * time.Second).Err(); err1 != nil {
 		log.Println(err1)
