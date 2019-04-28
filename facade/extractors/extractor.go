@@ -5,6 +5,7 @@ import (
 	"github.com/kushao1267/Facade/facade/techniques"
 	"github.com/kushao1267/Facade/facade/utils"
 	"strings"
+	"html"
 )
 
 const MarkTechnique = false
@@ -122,15 +123,21 @@ func (d Extractor) runTechnique(technique techniques.Technique, html string) tec
 
 // cleanUpText Cleanup text values like titles or descriptions.
 func (d Extractor) cleanUpText(value, mark string) string {
+	// 去掉空格
 	text := strings.TrimSpace(value)
 
-	// 去除标签
-	text = utils.CleanHtmlTags(text)
+	// 去除标签, 其中Unescape text是将"&lt;&gt;"这样的字符变为标签"<>"以便于去除.
+	text = utils.CleanHtmlTags(html.UnescapeString(text))
 
-	// 长度限制
-	if len(text) > 125 {
-		text = text[:125] + "..."
+	// 去掉非utf-8字符
+	text = utils.ValidUTF8(text)
+
+	//// 长度限制
+	runeText := []rune(text)
+	if len(runeText) > 125 {
+		runeText = append(runeText[:125], []rune("...")...)
 	}
+	text = string(runeText)
 
 	if mark != "" {
 		text = mark + " " + text

@@ -1,6 +1,9 @@
 package utils
 
-import "regexp"
+import (
+	"regexp"
+	"unicode/utf8"
+)
 
 // StringInSlice 判断字段串是否在slice中
 func StringInSlice(target string, list []string) bool {
@@ -75,6 +78,23 @@ func Domain(url string) string {
 		return domain[1]
 	}
 	return "Universal"
+}
+
+func ValidUTF8(s string) string{
+	if !utf8.ValidString(s) {
+		v := make([]rune, 0, len(s))
+		for i, r := range s {
+			if r == utf8.RuneError {
+				_, size := utf8.DecodeRuneInString(s[i:])
+				if size == 1 {
+					continue
+				}
+			}
+			v = append(v, r)
+		}
+		return string(v)
+	}
+	return s
 }
 
 //// 从结构体根据名称获取slice字段的值

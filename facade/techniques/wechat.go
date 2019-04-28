@@ -39,6 +39,12 @@ func (t WeChatTechnique) Extract(html string) DirtyExtracted {
 		extracted[ImagesField] = append(extracted[ImagesField], images[1:]...)
 	}
 	// description
+	doc.Find("section").Each(func(i int, selection *goquery.Selection) {
+		if i<3 {
+			extracted[DescriptionsField] = append(extracted[DescriptionsField], selection.Text())
+		}
+	})
+
 	descriptions := utils.MatchOneOf(jsCode, `msg_desc = "(.+?)";`)
 	if len(descriptions) > 1 {
 		extracted[DescriptionsField] = append(extracted[DescriptionsField], descriptions[1:]...)
