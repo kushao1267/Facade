@@ -2,6 +2,7 @@
 ![GitHub](https://img.shields.io/github/license/kushao1267/facade.svg)
 ![GitHub repo size](https://img.shields.io/github/repo-size/kushao1267/facade.svg)
 ![Build](https://travis-ci.org/kushao1267/Facade.svg?branch=master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/kushao1267/Facade)](https://goreportcard.com/report/github.com/kushao1267/Facade)
 [![codecov](https://codecov.io/gh/kushao1267/Facade/branch/master/graph/badge.svg)](https://codecov.io/gh/kushao1267/Facade)
 
 
