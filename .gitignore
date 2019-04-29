@@ -8,7 +8,7 @@ Makefile
 .vscode
 .env
 venv
-./bin
+bin/
 
 coverage.txt
 

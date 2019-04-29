@@ -12,17 +12,16 @@ import (
 )
 
 var LinkPreviewService *LinkPreview
-var redisdb *redis.Client
+var redisDB *redis.Client
 
 // See use: https://github.com/go-redis/redis/blob/master/example_test.go
 func init() {
 	LinkPreviewService = NewLinkPreview()
 
-	redisdb = NewRedis(config.AllConf.Redis)
+	redisDB = NewRedis(config.AllConf.Redis)
 }
 
 func NewRedis(c config.Redis) *redis.Client {
-	log.Println(c)
 	db := redis.NewClient(&redis.Options{
 		Addr:        c.Addr,
 		Password:    c.Password,
@@ -71,7 +70,7 @@ func (l LinkPreview) GetValues(url string, fields ...string) (error, []string) {
 	s := make([]string, len(fields))
 	var empty []string
 
-	val, err := redisdb.HMGet(key, fields...).Result()
+	val, err := redisDB.HMGet(key, fields...).Result()
 
 	if err != nil {
 		return err, empty
@@ -90,16 +89,16 @@ func (l LinkPreview) GetValues(url string, fields ...string) (error, []string) {
 func (l LinkPreview) SetValues(url string, fields map[string]interface{}) {
 	key := l.GetKey(url)
 
-	redisdb.HMSet(key, fields)
+	redisDB.HMSet(key, fields)
 
-	if err1 := redisdb.Expire(key, config.AllConf.Redis.Expire * time.Second).Err(); err1 != nil {
+	if err1 := redisDB.Expire(key, config.AllConf.Redis.Expire * time.Second).Err(); err1 != nil {
 		log.Println(err1)
 	}
 }
 
 func (l LinkPreview) Delete(url string) {
 	key := l.GetKey(url)
-	if err := redisdb.Del(key).Err(); err != nil {
+	if err := redisDB.Del(key).Err(); err != nil {
 		panic(err)
 	}
 }

@@ -1,9 +1,8 @@
 package api
 
 import (
-	"os"
-
 	"github.com/gin-gonic/gin"
+	"os"
 )
 
 const (
@@ -17,7 +16,7 @@ const (
 func Server(addr ...string) {
 	r := gin.New()
 	r.Use(gin.Logger())
-	r.Use(gin.Recovery()) // Use中間件
+	r.Use(gin.Recovery())
 
 	if os.Getenv("GIN_MODE") == ReleaseENV {
 		gin.SetMode(gin.ReleaseMode)
@@ -25,7 +24,6 @@ func Server(addr ...string) {
 		gin.SetMode(gin.TestMode)
 	} else {
 		gin.SetMode(gin.DebugMode)
-
 	}
 
 	r.GET("/ping", Ping)

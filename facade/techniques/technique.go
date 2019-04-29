@@ -44,6 +44,7 @@ func GetTechnique(host string) (Technique, error) {
 		"www.toutiao.com":  ToutiaoTechnique{"ToutiaoTechnique"},
 		"m.zjbyte.com":  ToutiaoTechnique{"ToutiaoTechnique"},
 		"page.om.qq.com":   QQOMTechnique{"QQOMTechnique"},
+		"post.mp.qq.com":   QQMPTechnique{"QQMPTechnique"},
 		"m.weibo.cn":       WeiboTechnique{"WeiboTechnique"},
 		"media.weibo.cn":       WeiboArticleTechnique{"WeiboArticleTechnique"},
 	}
