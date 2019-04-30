@@ -21,5 +21,5 @@ func TestWeChatTechnique_Extract(t *testing.T) {
 	if allEmpty {
 		t.Fail()
 	}
-	log.Println(extracted)
+	t.Log(extracted)
 }

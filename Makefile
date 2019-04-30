@@ -1,7 +1,5 @@
 include .env
 
-.PHONY:build-image-prod prod prod-down build-prod dev exec-prod test tidy lint clean
-
 build-prod:
 	CGO_ENABLED=0 GOOS=$(GOOS) $(GO) build -o ./bin/$(APP_NAME) -mod=vendor main.go
 

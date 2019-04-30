@@ -27,7 +27,7 @@ func TestHeadTagsTechnique_Extract(t *testing.T) {
 	if allEmpty {
 		t.Fail()
 	}
-	log.Println(extracted)
+	t.Log(extracted)
 }
 
 func TestHTML5SemanticTagsTechnique_Extract(t *testing.T) {

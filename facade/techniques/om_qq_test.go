@@ -2,7 +2,6 @@ package techniques
 
 import (
 	"github.com/kushao1267/Facade/facade/utils"
-	"log"
 	"testing"
 )
 
@@ -21,5 +20,5 @@ func TestQQOMTechnique_Extract(t *testing.T) {
 	if allEmpty {
 		t.Fail()
 	}
-	log.Println(extracted)
+	t.Log(extracted)
 }

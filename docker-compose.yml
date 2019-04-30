@@ -15,7 +15,7 @@ services:
       - 8080:8080
     networks: # Networks to join (Services on the same network can communicate with each other using their name)
       - backend
-    command: make prod
+    command: ./bin/facade_server
 
   redis:
     container_name: redis
