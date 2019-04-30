@@ -1,7 +1,6 @@
 package techniques
 
 import (
-	"log"
 	"testing"
 )
 
@@ -56,7 +55,7 @@ func TestHTML5SemanticTagsTechnique_Extract(t *testing.T) {
 	if allEmpty {
 		t.Fail()
 	}
-	log.Println(extracted)
+	t.Log(extracted)
 }
 
 func TestSemanticTagsTechnique_Extract(t *testing.T) {
@@ -85,5 +84,5 @@ func TestSemanticTagsTechnique_Extract(t *testing.T) {
 	if allEmpty {
 		t.Fail()
 	}
-	log.Println(extracted)
+	t.Log(extracted)
 }
