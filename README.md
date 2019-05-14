@@ -10,7 +10,7 @@
 
 Facade是一个全网通用的链接预览服务，它的功能如下:
 
-* 支持REST API方式获取链接预览信息
+* 支持REST API方式获取链接预览信息，API Server支持热加载
 * 支持自定义预览信息的字段（已能够支持视频，feed，音频，标题，描述等字段）
 * 支持提取图片url以及图片解析
 * 有很强的可扩展性，能够自定义支持许多网站，可将technique自由搭配使用
@@ -58,6 +58,11 @@ $ cp .env.tpl .env
 make compose
 ```
 仅使用alpine镜像，严格控制制作的镜像大小在10M内.可以在docker-compose.yml内设置Redis相关配置.
+
+3.调试API server, 使用gowatch来实现web服务的热加载.
+```
+make dev
+```
 
 3.调用预览接口
 ```
