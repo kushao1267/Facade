@@ -35,4 +35,4 @@ lint:
 	@golint
 
 clean:
-	@$(GO) clean -mod=vendor && rm -rf ./bin && rm -f gin-bin
+	@$(GO) clean -mod=vendor && rm -rf ./bin
