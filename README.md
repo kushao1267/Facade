@@ -59,7 +59,7 @@ make prod
 ```
 仅使用alpine镜像，严格控制制作的镜像大小在10M内.可以在docker-compose.yml内设置Redis相关配置.
 
-3.调试API server, 使用![gowatch](https://github.com/silenceper/gowatch)来实现web服务的热加载.
+3.调试API server, 使用[gowatch](https://github.com/silenceper/gowatch)来实现web服务的热加载.
 ```
 make dev
 ```
