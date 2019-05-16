@@ -6,7 +6,7 @@
 [![codecov](https://codecov.io/gh/kushao1267/Facade/branch/master/graph/badge.svg)](https://codecov.io/gh/kushao1267/Facade)
 
 
-## Features
+## About
 
 Facade是一个全网通用的链接预览服务，它的功能如下:
 
@@ -59,7 +59,7 @@ make prod
 ```
 仅使用alpine镜像，严格控制制作的镜像大小在10M内.可以在docker-compose.yml内设置Redis相关配置.
 
-3.调试API server, 使用gowatch来实现web服务的热加载.
+3.调试API server, 使用![gowatch](https://github.com/silenceper/gowatch)来实现web服务的热加载.
 ```
 make dev
 ```
