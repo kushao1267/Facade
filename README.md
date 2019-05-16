@@ -55,7 +55,7 @@ $ cp .env.tpl .env
 
 2.使用docker-compose一键启动API和Redis缓存服务，只需运行：
 ```
-make compose
+make prod
 ```
 仅使用alpine镜像，严格控制制作的镜像大小在10M内.可以在docker-compose.yml内设置Redis相关配置.
 
