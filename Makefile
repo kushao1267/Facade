@@ -17,7 +17,7 @@ prod-down:
 
 dev:
 	# 运行开发环境
-	@GIN_MODE=test gowatch -o ./bin/facade_dev_server -p -mod=vendor .
+	@GIN_MODE=test gowatch -o ./bin/facade_dev_server -p main.go
 
 exec-prod:
 	# 进入容器
