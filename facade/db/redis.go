@@ -4,11 +4,11 @@ import (
 	"log"
 	"time"
 
+	"errors"
 	"github.com/go-redis/redis"
 	"github.com/kushao1267/Facade/facade/config"
 	"github.com/kushao1267/Facade/facade/utils"
 	"github.com/mgutz/ansi"
-	"errors"
 )
 
 var LinkPreviewService *LinkPreview
@@ -91,7 +91,7 @@ func (l LinkPreview) SetValues(url string, fields map[string]interface{}) {
 
 	redisDB.HMSet(key, fields)
 
-	if err1 := redisDB.Expire(key, config.AllConf.Redis.Expire * time.Second).Err(); err1 != nil {
+	if err1 := redisDB.Expire(key, config.AllConf.Redis.Expire*time.Second).Err(); err1 != nil {
 		log.Println(err1)
 	}
 }

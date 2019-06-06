@@ -5,6 +5,6 @@ import (
 	_ "github.com/kushao1267/Facade/facade/db"
 )
 
-func main()  {
+func main() {
 	api.Server("0.0.0.0:8080")
 }

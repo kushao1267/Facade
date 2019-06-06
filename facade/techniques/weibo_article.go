@@ -25,7 +25,7 @@ func (t WeiboArticleTechnique) Extract(html string) DirtyExtracted {
 	if err != nil {
 		return extracted
 	}
-	jsCode:=doc.Find("script").Text()
+	jsCode := doc.Find("script").Text()
 	/* 自定义提取信息 */
 	// title
 	titles := utils.MatchOneOf(jsCode, `"title": "(.+?)"`)

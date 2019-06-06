@@ -40,7 +40,7 @@ func (t WeChatTechnique) Extract(html string) DirtyExtracted {
 	}
 	// description
 	doc.Find("section").Each(func(i int, selection *goquery.Selection) {
-		if i<3 {
+		if i < 3 {
 			extracted[DescriptionsField] = append(extracted[DescriptionsField], selection.Text())
 		}
 	})

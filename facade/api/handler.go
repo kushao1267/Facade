@@ -22,7 +22,7 @@ func Ping(c *gin.Context) {
 
 type ReturnData map[string]string
 
-func DelCache(c *gin.Context){
+func DelCache(c *gin.Context) {
 	url := c.Request.FormValue("url")
 	db.LinkPreviewService.Delete(url)
 
@@ -60,7 +60,7 @@ func LinkPreview(c *gin.Context) {
 	if err == nil {
 		title, description, image = result[0], result[1], result[2]
 		log.Println("取到缓存")
-	}else {
+	} else {
 		// 缓存不存在
 
 		host, err := utils.GetHostName(url)
@@ -108,4 +108,3 @@ func LinkPreview(c *gin.Context) {
 		},
 	})
 }
-

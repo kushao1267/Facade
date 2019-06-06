@@ -80,7 +80,7 @@ func Domain(url string) string {
 	return "Universal"
 }
 
-func ValidUTF8(s string) string{
+func ValidUTF8(s string) string {
 	if !utf8.ValidString(s) {
 		v := make([]rune, 0, len(s))
 		for i, r := range s {

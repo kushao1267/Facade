@@ -38,4 +38,3 @@ func (t QQOMTechnique) Extract(html string) DirtyExtracted {
 
 	return extracted
 }
-

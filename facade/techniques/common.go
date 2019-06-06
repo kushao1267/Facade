@@ -8,6 +8,7 @@ import (
 type BaseTechnique struct {
 	Name string
 }
+
 func (t BaseTechnique) setName(name string) {
 	t.Name = name
 }
@@ -16,10 +17,9 @@ func (t BaseTechnique) GetName() string {
 	return t.Name
 }
 
-func (t BaseTechnique) Extract(html string) DirtyExtracted{
+func (t BaseTechnique) Extract(html string) DirtyExtracted {
 	return GetEmptyDirtyExtracted()
 }
-
 
 // Extract info from standard HTML metatags like title
 // This is usually a last-resort, low quality, but reliable parsing mechanism.

@@ -37,4 +37,3 @@ func (t QQMPTechnique) Extract(html string) DirtyExtracted {
 
 	return extracted
 }
-
