@@ -1,7 +1,7 @@
 include .env
 
 build-prod:
-	CGO_ENABLED=0 GOOS=$(GOOS) $(GO) build -o ./bin/$(APP_NAME) -mod=vendor main.go
+	GO111MODULE=on CGO_ENABLED=0 GOOS=$(GOOS) $(GO) build -o ./bin/$(APP_NAME) -mod=vendor main.go
 
 build-image-prod: build-prod
 	# 构建生产镜像
@@ -16,8 +16,8 @@ prod-down:
 	docker-compose down
 
 dev:
-	# 运行开发环境
-	@GIN_MODE=test gowatch -o ./bin/facade_dev_server -p main.go
+	# 运行开发环境(热启动)
+	gin -a 8080 -p 3000
 
 exec-prod:
 	# 进入容器
@@ -25,14 +25,14 @@ exec-prod:
 
 test:
 	# 运行测试
-	@$(GO) test -mod=vendor -v ./facade/techniques/*
+	@GO111MODULE=on $(GO) test -mod=vendor -v ./facade/techniques/*
 
 tidy:
-	$(GO) mod tidy
-	$(GO) mod vendor
+	$GO111MODULE=on (GO) mod tidy
+	$GO111MODULE=on (GO) mod vendor
 
 lint:
 	@golint
 
 clean:
-	@$(GO) clean -mod=vendor && rm -rf ./bin
+	@GO111MODULE=on $(GO) clean -mod=vendor && rm -rf ./bin
