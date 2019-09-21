@@ -8,7 +8,7 @@ import (
 func TestQQOMTechnique_Extract(t *testing.T) {
 	var technique QQOMTechnique
 
-	html := utils.GetHtml("https://page.om.qq.com/page/OdcZGP3nLryW2tIbF8udTYrg0?source=omapp&appbar=omapp")
+	_, html := utils.GetHtml("https://page.om.qq.com/page/OdcZGP3nLryW2tIbF8udTYrg0?source=omapp&appbar=omapp")
 
 	extracted := technique.Extract(html)
 	allEmpty := true

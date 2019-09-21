@@ -8,7 +8,7 @@ import (
 func TestWeiboTechnique_Extract(t *testing.T) {
 	var technique WeiboTechnique
 
-	html := utils.GetHtml("https://m.weibo.cn/5187664653/4354456894352205")
+	_, html := utils.GetHtml("https://m.weibo.cn/5187664653/4354456894352205")
 
 	extracted := technique.Extract(html)
 	allEmpty := true

@@ -8,7 +8,7 @@ import (
 func TestWeChatTechnique_Extract(t *testing.T) {
 	var technique WeChatTechnique
 
-	html := utils.GetHtml("https://mp.weixin.qq.com/s/VRzeIxFO_sHTOHAyZRX7xw")
+	_, html := utils.GetHtml("https://mp.weixin.qq.com/s/VRzeIxFO_sHTOHAyZRX7xw")
 
 	extracted := technique.Extract(html)
 	allEmpty := true

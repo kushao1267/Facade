@@ -8,7 +8,7 @@ import (
 func TestToutiaoTechnique_Extract(t *testing.T) {
 	var technique ToutiaoTechnique
 
-	html := utils.GetHtml("https://www.toutiao.com/a6673091667941130756/")
+	_, html := utils.GetHtml("https://www.toutiao.com/a6673091667941130756/")
 
 	extracted := technique.Extract(html)
 	allEmpty := true

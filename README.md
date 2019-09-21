@@ -26,8 +26,11 @@ go get -u github.com/kushao1267/Facade
 
 ## Module
 
-* api模块
-提供链接预览的API服务，gonic-gin框架，[gin文档](https://gin-gonic.com/docs/)
+* controllers模块
+提供链接预览的控制器，gonic-gin框架，[gin文档](https://gin-gonic.com/docs/)
+
+* services模块
+提供相应实体的服务，例如LinkPreviewService，提供所有跟此实体(LinkPreview)相关的操作。
 
 * config模块
 加载toml文件配置，使用github.com/BurntSushi/toml库, [详见](https://github.com/BurntSushi/toml)
@@ -58,7 +61,7 @@ make prod
 ```
 仅使用alpine镜像，严格控制制作的镜像大小在10M内.可以在docker-compose.yml内设置Redis相关配置.
 
-3.调试API server, 使用[gowatch](https://github.com/silenceper/gowatch)来实现web服务的热加载.
+3.调试API server, 使用[gin - A live reload utility for Go web applications.](https://github.com/codegangsta/gin)来实现web服务的热加载.
 ```
 make dev
 ```
@@ -77,11 +80,10 @@ $ curl http://127.0.0.1:8080/link_preview -F url=https://media.weibo.cn/article\
 
 
 ## Test
-目前只测试所有technique
+目前测试所有定义的technique
 ```
 $ make test
 ```
-
 
 ## LICENSE
 [MIT License](https://github.com/kushao1267/facade/blob/master/LICENSE)

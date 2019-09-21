@@ -146,9 +146,6 @@ func (d Extractor) cleanUpText(value, mark string) string {
 }
 
 // Transform relative URLs into absolute URLs if possible.
-// If the value_url is already absolute, or we don't know the
-// source_url, then return the existing value. If the value_url is
-// relative, and we know the source_url, then try to rewrite it.
 func (d Extractor) cleanUpUrl(valueUrl, sourceUrl, mark string) string {
 	netloc, _ := utils.GetHostName(valueUrl)
 
@@ -170,11 +167,6 @@ func (d Extractor) cleanUpUrl(valueUrl, sourceUrl, mark string) string {
 }
 
 // Allows standardizing extracted contents, at this time:
-// 1. removes multiple whitespaces
-// 2. rewrite relative URLs as absolute URLs if source_url is specified
-// 3. filter out duplicate values
-// 4. marks the technique that produced the result
-// 5. returns only specified text_types and url_types depending on self.strict_types
 func (d Extractor) cleanUp(results techniques.DirtyExtracted, technique techniques.Technique, sourceUrl string) Extracted {
 	cleanedResults := Extracted{}
 
@@ -209,14 +201,6 @@ func (d Extractor) cleanUp(results techniques.DirtyExtracted, technique techniqu
 }
 
 // Extracts contents from an HTML document.
-// >>> from extraction import Extractor
-// >>> import requests
-// >>> html = requests.get("http://lethain.com/").text
-// >>> extracted = Extractor().extract(html)
-// >>> print extracted
-// `source_url` is optional, but allows for a certain level of
-// cleanup to be performed, such as converting relative URLs
-// into absolute URLs and such.
 func (d Extractor) Extract(html, sourceUrl string) Extracted {
 	var extracted = Extracted{}
 

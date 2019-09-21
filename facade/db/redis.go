@@ -4,21 +4,17 @@ import (
 	"log"
 	"time"
 
-	"errors"
 	"github.com/go-redis/redis"
 	"github.com/kushao1267/Facade/facade/config"
-	"github.com/kushao1267/Facade/facade/utils"
 	"github.com/mgutz/ansi"
 )
 
-var LinkPreviewService *LinkPreview
-var redisDB *redis.Client
+var RedisDB *redis.Client
 
 // See use: https://github.com/go-redis/redis/blob/master/example_test.go
-func init() {
-	LinkPreviewService = NewLinkPreview()
-
-	redisDB = NewRedis(config.AllConf.Redis)
+func Init() {
+	// 初始化redis
+	RedisDB = NewRedis(config.AllConf.Redis)
 }
 
 func NewRedis(c config.Redis) *redis.Client {
@@ -36,69 +32,3 @@ func NewRedis(c config.Redis) *redis.Client {
 	return db
 }
 
-// LinkPreview: 链接预览缓存服务
-type LinkPreview struct {
-	// store field
-	Url         string
-	Title       string
-	Description string
-	Image       string
-	ImageStyle  string
-	ImageHeight string
-	ImageWidth  string
-}
-
-func NewLinkPreview() *LinkPreview {
-	return &LinkPreview{
-		"url",
-		"title",
-		"description",
-		"image",
-		"image_style",
-		"image_height",
-		"image_width",
-	}
-}
-
-func (l LinkPreview) GetKey(url string) string {
-	hash := utils.GetMD5Hash(url)
-	return "link_preview_cache:" + hash
-}
-
-func (l LinkPreview) GetValues(url string, fields ...string) (error, []string) {
-	key := l.GetKey(url)
-	s := make([]string, len(fields))
-	var empty []string
-
-	val, err := redisDB.HMGet(key, fields...).Result()
-
-	if err != nil {
-		return err, empty
-	}
-	for i, _ := range fields {
-		if val[i] != nil {
-			s[i] = val[i].(string)
-		} else {
-			return errors.New("not find"), empty
-		}
-	}
-
-	return nil, s
-}
-
-func (l LinkPreview) SetValues(url string, fields map[string]interface{}) {
-	key := l.GetKey(url)
-
-	redisDB.HMSet(key, fields)
-
-	if err1 := redisDB.Expire(key, config.AllConf.Redis.Expire*time.Second).Err(); err1 != nil {
-		log.Println(err1)
-	}
-}
-
-func (l LinkPreview) Delete(url string) {
-	key := l.GetKey(url)
-	if err := redisDB.Del(key).Err(); err != nil {
-		panic(err)
-	}
-}
