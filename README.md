@@ -26,8 +26,11 @@ go get -u github.com/kushao1267/Facade
 
 ## Module
 
-* api模块
-提供链接预览的API服务，gonic-gin框架，[gin文档](https://gin-gonic.com/docs/)
+* controllers模块
+提供链接预览的控制器，gonic-gin框架，[gin文档](https://gin-gonic.com/docs/)
+
+* services模块
+提供相应实体的服务，例如LinkPreviewService，提供所有跟此实体(LinkPreview)相关的操作。
 
 * config模块
 加载toml文件配置，使用github.com/BurntSushi/toml库, [详见](https://github.com/BurntSushi/toml)
@@ -58,16 +61,31 @@ make prod
 ```
 仅使用alpine镜像，严格控制制作的镜像大小在10M内.可以在docker-compose.yml内设置Redis相关配置.
 
-3.调试API server, 使用[gowatch](https://github.com/silenceper/gowatch)来实现web服务的热加载.
+3.调试API server, 使用[gin - A live reload utility for Go web applications.](https://github.com/codegangsta/gin)来实现web服务的热加载.
 ```
 make dev
 ```
+其对应点命令是`gin -a 8080 -p 3000`, -a参数是WebApp所监听的端口，-p是gin为该WebApp服务代理的端口；最终访问API是从-p所指定的端口访问。
 
 4.调用预览接口
 ```
-$ curl http://127.0.0.1:8080/link_preview -F url=https://media.weibo.cn/article\?id\=2309404362621859024154\&jumpfrom\=weibocom
+$ curl http://127.0.0.1:3000/api/v1/ping
 
-{"code":1,"data":{"description":"当你远远凝视深渊时，深渊也在凝视你。","image":"https://wx4.sinaimg.cn/orj480/77e0a903ly8g1kiedveqsj20u00u0787.jpg","title":"会好的 心灵的感冒"},"msg":"success"}%
+{"message":"pong"}
+```
+
+```
+$ curl http://127.0.0.1:3000/api/v1/preview -F "url=https://blog.csdn.net/hugejihu9/article/details/83992009"
+
+{
+    "code":"1",
+    "msg":"success"
+    "data":{
+        "description":"文章来自：源码在线https://www.shengli.me/php/209.html 注：",
+        "image":"https://img-blog.csdnimg.cn/20181112144936680.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2h1Z2VqaWh1OQ==,size_16,color_FFFFFF,t_70",
+        "title":"CURL模拟表单的post提交 - hugejihu9的专栏 - CSDN博客"
+    },
+}
 ```
 
 5.调用接口console打印出详细的technique调用日志，并通过颜色区分
@@ -77,11 +95,10 @@ $ curl http://127.0.0.1:8080/link_preview -F url=https://media.weibo.cn/article\
 
 
 ## Test
-目前只测试所有technique
+目前测试所有定义的technique
 ```
 $ make test
 ```
-
 
 ## LICENSE
 [MIT License](https://github.com/kushao1267/facade/blob/master/LICENSE)

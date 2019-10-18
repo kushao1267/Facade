@@ -1,4 +1,4 @@
-package api
+package controllers
 
 import (
 	"log"
@@ -6,25 +6,36 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kushao1267/Facade/facade/db"
+	"github.com/kushao1267/Facade/facade/services"
 	"github.com/kushao1267/Facade/facade/extractors"
 	"github.com/kushao1267/Facade/facade/techniques"
 	"github.com/kushao1267/Facade/facade/utils"
+	"github.com/kushao1267/Facade/facade/forms"
 	"github.com/mgutz/ansi"
 )
 
-// Ping: test whether if the API server is running
-func Ping(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "pong",
-	})
-}
 
-type ReturnData map[string]string
 
-func DelCache(c *gin.Context) {
-	url := c.Request.FormValue("url")
-	db.LinkPreviewService.Delete(url)
+const (
+	FailCode = "0" // 失败状态码
+	SuccessCode = "1" // 成功状态码
+)
+
+type LinkController struct {}
+type returnData map[string]string
+
+// Del delete link preview cache
+func (ctrl LinkController)Del(c *gin.Context) {
+	var linkForm forms.LinkForm
+	if c.ShouldBind(&linkForm) !=nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code": FailCode,
+			"msg": "Invalid form",
+			"form": linkForm,
+		})
+		return
+	}
+	services.LinkPreviewService.Delete(linkForm.Url)
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": SuccessCode,
@@ -33,15 +44,24 @@ func DelCache(c *gin.Context) {
 	return
 }
 
-// LinkPreview: link preview API
-func LinkPreview(c *gin.Context) {
-	url := c.Request.FormValue("url")
+// Preview: link preview API
+func (ctrl LinkController)Preview(c *gin.Context) {
+	var linkForm forms.LinkForm
+	if c.ShouldBind(&linkForm) !=nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code": FailCode,
+			"msg": "Invalid form",
+			"form": linkForm,
+		})
+		return
+	}
+	url := linkForm.Url
 
 	if !strings.HasPrefix(url, "https") && !strings.HasPrefix(url, "http") {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": FailCode,
 			"msg":  "fail",
-			"data": ReturnData{
+			"data": returnData{
 				"request_url": url,
 			},
 		})
@@ -50,11 +70,7 @@ func LinkPreview(c *gin.Context) {
 
 	var title, description, image string
 	// 从缓存中取结果
-	err, result := db.LinkPreviewService.GetValues(
-		url,
-		db.LinkPreviewService.Title,
-		db.LinkPreviewService.Description,
-		db.LinkPreviewService.Image)
+	err, result := services.LinkPreviewService.GetValues(url)
 
 	// 缓存存在
 	if err == nil {
@@ -83,14 +99,22 @@ func LinkPreview(c *gin.Context) {
 				techniques.SemanticTagsTechnique{"SemanticTagsTechnique"},
 			)
 		}
-		extracted := extractor.Extract(utils.GetHtml(url), url)
+		err, html := utils.GetHtml(url)
+		if err != nil{
+			c.JSON(http.StatusOK, gin.H{
+				"code": FailCode,
+				"msg":  "请求页面错误," + err.Error(),
+			})
+			return
+		}
+		extracted := extractor.Extract(html, url)
 		// test print
 		title, description, image = utils.GetSafeFirst(extracted[techniques.TitlesField]),
 			utils.GetSafeFirst(extracted[techniques.DescriptionsField]),
 			utils.GetSafeFirst(extracted[techniques.ImagesField])
 
 		// 缓存结果
-		db.LinkPreviewService.SetValues(url,
+		services.LinkPreviewService.SetValues(url,
 			map[string]interface{}{
 				"title":       title,
 				"description": description,
@@ -101,7 +125,7 @@ func LinkPreview(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code": SuccessCode,
 		"msg":  "success",
-		"data": ReturnData{
+		"data": returnData{
 			"title":       title,
 			"description": description,
 			"image":       image,

@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	requestUrlTimeout = 6
+	requestUrlTimeout = 5
 	userAgent         = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15"
 )
 
@@ -48,16 +48,18 @@ func GetJson(url string, v interface{}) {
 }
 
 // GetHtml
-func GetHtml(url string) string {
+func GetHtml(url string) (error, string) {
 	resp, err := grequests.Get(url, &grequests.RequestOptions{
 		RequestTimeout: requestUrlTimeout * time.Second,
+
 		UserAgent:      userAgent,
 	})
 	if err != nil {
 		log.Println(ansi.Color("[GetHtml]:", "red"), err)
+		return err, ""
 	}
 
-	return resp.String()
+	return nil, resp.String()
 }
 
 // CleanHtmlTags 简单地处理html标签
