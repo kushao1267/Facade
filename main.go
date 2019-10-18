@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-<<<<<<< HEAD
 	"os"
 
-	"github.com/kushao1267/Facade/facade/api"
+	"github.com/gin-gonic/gin"
+	"github.com/kushao1267/Facade/facade/controllers"
+	"github.com/kushao1267/Facade/facade/db"
 	_ "github.com/kushao1267/Facade/facade/db"
 )
 
@@ -13,25 +14,7 @@ var githash = ""
 var buildstamp = ""
 var goversion = ""
 
-func main() {
-	// 二进制文件信息
-	args := os.Args
-	if len(args) == 2 && (args[1] == "--version" || args[1] == "-v") {
-		fmt.Printf("Git Commit Hash: %s\n", githash)
-		fmt.Printf("UTC Build Time : %s\n", buildstamp)
-		fmt.Printf("Golang Version : %s\n", goversion)
-		return
-	}
-	// server服务
-	api.Server("0.0.0.0:8080")
-=======
-	"github.com/gin-gonic/gin"
-	"github.com/kushao1267/Facade/facade/controllers"
-	"github.com/kushao1267/Facade/facade/db"
-	"os"
-)
-
-//CORSMiddleware
+// CORSMiddleware
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost")
@@ -51,6 +34,15 @@ func CORSMiddleware() gin.HandlerFunc {
 }
 
 func main() {
+	// 二进制文件信息
+	args := os.Args
+	if len(args) == 2 && (args[1] == "--version" || args[1] == "-v") {
+		fmt.Printf("Git Commit Hash: %s\n", githash)
+		fmt.Printf("UTC Build Time : %s\n", buildstamp)
+		fmt.Printf("Golang Version : %s\n", goversion)
+		return
+	}
+
 	r := gin.New()
 	gin.SetMode(os.Getenv("GIN_MODE"))
 
@@ -71,5 +63,4 @@ func main() {
 	}
 
 	_ = r.Run(":8080")
->>>>>>> 41768819d1a05f2607694f2f4665b9db54b88748
 }

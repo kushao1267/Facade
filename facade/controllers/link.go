@@ -6,31 +6,29 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kushao1267/Facade/facade/services"
 	"github.com/kushao1267/Facade/facade/extractors"
+	"github.com/kushao1267/Facade/facade/forms"
+	"github.com/kushao1267/Facade/facade/services"
 	"github.com/kushao1267/Facade/facade/techniques"
 	"github.com/kushao1267/Facade/facade/utils"
-	"github.com/kushao1267/Facade/facade/forms"
 	"github.com/mgutz/ansi"
 )
 
-
-
 const (
-	FailCode = "0" // 失败状态码
+	FailCode    = "0" // 失败状态码
 	SuccessCode = "1" // 成功状态码
 )
 
-type LinkController struct {}
+type LinkController struct{}
 type returnData map[string]string
 
 // Del delete link preview cache
-func (ctrl LinkController)Del(c *gin.Context) {
+func (ctrl LinkController) Del(c *gin.Context) {
 	var linkForm forms.LinkForm
-	if c.ShouldBind(&linkForm) !=nil {
+	if c.ShouldBind(&linkForm) != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code": FailCode,
-			"msg": "Invalid form",
+			"msg":  "Invalid form",
 			"form": linkForm,
 		})
 		return
@@ -45,12 +43,12 @@ func (ctrl LinkController)Del(c *gin.Context) {
 }
 
 // Preview: link preview API
-func (ctrl LinkController)Preview(c *gin.Context) {
+func (ctrl LinkController) Preview(c *gin.Context) {
 	var linkForm forms.LinkForm
-	if c.ShouldBind(&linkForm) !=nil {
+	if c.ShouldBind(&linkForm) != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code": FailCode,
-			"msg": "Invalid form",
+			"msg":  "Invalid form",
 			"form": linkForm,
 		})
 		return
@@ -100,7 +98,7 @@ func (ctrl LinkController)Preview(c *gin.Context) {
 			)
 		}
 		err, html := utils.GetHtml(url)
-		if err != nil{
+		if err != nil {
 			c.JSON(http.StatusOK, gin.H{
 				"code": FailCode,
 				"msg":  "请求页面错误," + err.Error(),
