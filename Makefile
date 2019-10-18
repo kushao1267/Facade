@@ -1,38 +1,44 @@
 include .env
 
-build-prod:
-	CGO_ENABLED=0 GOOS=$(GOOS) $(GO) build -o ./bin/$(APP_NAME) -mod=vendor main.go
+GO=$(go env GOROOT)/bin/go
 
-build-image-prod: build-prod
+.PHONY:build-image-prod
+build-image-prod:
 	# 构建生产镜像
-	docker build -t facade .
+	docker build --build-arg APP_NAME=Facede \
+				 -f Dockerfile . \
+				 -t "kushao1267/facede:latest"
 
-prod: build-image-prod
+.PHONY:up
+up: build-image-prod
 	# 启动整个项目,生产环境
 	docker-compose up
 
-prod-down: 
+.PHONY:down
+down:
 	# 停掉整个项目,生产环境
 	docker-compose down
 
+.PHONY:dev
 dev:
 	# 运行开发环境
 	@GIN_MODE=test gowatch -o ./bin/facade_dev_server -p main.go
 
+.PHONY:exec-prod
 exec-prod:
 	# 进入容器
 	docker exec -it $(APP_NAME) sh
 
+.PHONY:test
 test:
 	# 运行测试
 	@$(GO) test -mod=vendor -v ./facade/techniques/*
 
+.PHONY:tidy
 tidy:
 	$(GO) mod tidy
-	$(GO) mod vendor
 
+.PHONY:lint
 lint:
 	@golint
 
-clean:
-	@$(GO) clean -mod=vendor && rm -rf ./bin

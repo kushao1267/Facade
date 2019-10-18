@@ -1,13 +1,29 @@
-FROM alpine:3.6
+FROM golang:latest as builder
 
-ENV app_name facade_server
-ENV app_dir /opt/app
+ENV GO111MODULE=on
+ENV GOPROXY=https://mirrors.aliyun.com/goproxy/
+ENV SOURCE_PATH=github.com/kushao1267/Facade
 
-WORKDIR ${app_dir}
+ARG APP_NAME
 
-RUN echo http://mirrors.aliyun.com/alpine/v3.6/main > /etc/apk/repositories \
-    && echo http://mirrors.aliyun.com/alpine/v3.6/main >> /etc/apk/repositories \
-    && apk add --no-cache make \
-    && apk add --no-cache ca-certificates
+COPY . /go/src/${SOURCE_PATH}
+RUN cd /go/src/${SOURCE_PATH} \
+    && CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=amd64 \
+    GOARM=6 \
+    go build -ldflags \
+    "-X 'main.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'`' -X 'main.githash=`git describe --always`' -X 'main.goversion=`go version`'" \
+    -o app main.go
 
-CMD ./bin/${app_name}
+FROM scratch
+
+ARG APP_NAME
+ENV SOURCE_PATH=github.com/kushao1267/Facade
+
+COPY --from=builder /go/src/${SOURCE_PATH}/config.toml /opt/
+COPY --from=builder /go/src/${SOURCE_PATH}/app /opt/
+
+WORKDIR /opt/
+
+ENTRYPOINT ["./app"]
