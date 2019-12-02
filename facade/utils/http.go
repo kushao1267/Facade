@@ -16,11 +16,13 @@ const (
 	userAgent         = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15"
 )
 
+// GetComponent ...
 func GetComponent(s string) (*url.URL, error) {
 	u, err := url.Parse(s)
 	return u, err
 }
 
+// GetHostName get host name
 func GetHostName(s string) (string, error) {
 	u, err := url.Parse(s)
 	if err != nil {
@@ -29,11 +31,12 @@ func GetHostName(s string) (string, error) {
 	return u.Host, nil
 }
 
+// UrlJoin join url
 func UrlJoin(source, target string) string {
 	return path.Join(source, target)
 }
 
-// GetJson
+// GetJson ...
 func GetJson(url string, v interface{}) {
 	resp, err := grequests.Get(url, &grequests.RequestOptions{
 		RequestTimeout: requestImgTimeout,
@@ -47,12 +50,12 @@ func GetJson(url string, v interface{}) {
 	}
 }
 
-// GetHtml
+// GetHtml ...
 func GetHtml(url string) (error, string) {
 	resp, err := grequests.Get(url, &grequests.RequestOptions{
 		RequestTimeout: requestUrlTimeout * time.Second,
 
-		UserAgent:      userAgent,
+		UserAgent: userAgent,
 	})
 	if err != nil {
 		log.Println(ansi.Color("[GetHtml]:", "red"), err)

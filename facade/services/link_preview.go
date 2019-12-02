@@ -44,7 +44,7 @@ func (l LinkPreview) GetValues(url string) (error, []string) {
 	if err != nil {
 		return err, empty
 	}
-	for i, _ := range fields {
+	for i := range fields {
 		if val[i] != nil {
 			s[i] = val[i].(string)
 		} else {

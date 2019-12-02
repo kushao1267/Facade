@@ -8,7 +8,9 @@ import (
 
 const (
 	requestImgTimeout = 4 * time.Second
+	// ImageHeightRule 图片高度限制
 	ImageHeightRule   = 170
+	// ImageWidthRule 图片宽度限制
 	ImageWidthRule    = 340
 )
 

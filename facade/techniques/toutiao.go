@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// ToutiaoTechnique
+// ToutiaoTechnique ...
 type ToutiaoTechnique BaseTechnique
 
 func (t ToutiaoTechnique) setName(name string) {

@@ -13,10 +13,12 @@ func (t BaseTechnique) setName(name string) {
 	t.Name = name
 }
 
+// GetName get technique name
 func (t BaseTechnique) GetName() string {
 	return t.Name
 }
 
+// Extract extract method
 func (t BaseTechnique) Extract(html string) DirtyExtracted {
 	return GetEmptyDirtyExtracted()
 }
@@ -90,7 +92,7 @@ func (t HeadTagsTechnique) Extract(html string) DirtyExtracted {
 	return extracted
 }
 
-// HTML5SemanticTagsTechnique
+// HTML5SemanticTagsTechnique ...
 type HTML5SemanticTagsTechnique BaseTechnique
 
 func (t HTML5SemanticTagsTechnique) setName(name string) {

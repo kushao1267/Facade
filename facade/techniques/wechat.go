@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// WeiboTechnique
+// WeiboTechnique ...
 type WeChatTechnique BaseTechnique
 
 func (t WeChatTechnique) setName(name string) {

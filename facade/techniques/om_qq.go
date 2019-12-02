@@ -4,7 +4,7 @@ import (
 	"github.com/kushao1267/Facade/facade/utils"
 )
 
-// QQOMTechnique
+// QQOMTechnique ...
 type QQOMTechnique BaseTechnique
 
 func (t QQOMTechnique) setName(name string) {

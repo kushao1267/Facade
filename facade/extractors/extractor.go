@@ -15,6 +15,7 @@ type Extracted map[string][]string
 
 var emptyData = ""
 
+// Represent print all Extracted content
 func (e Extracted) Represent() []string {
 	maxShown := 40
 	var detailStr []string

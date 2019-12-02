@@ -37,6 +37,7 @@ type Technique interface {
 // DirtyExtracted :未经过clean的提取结果
 type DirtyExtracted map[string][]string
 
+// GetTechnique 从hostname获取相应的technique
 func GetTechnique(host string) (Technique, error) {
 	// 从hostname获取相应的technique
 	techMap := map[string]Technique{

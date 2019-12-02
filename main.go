@@ -14,7 +14,7 @@ var githash = ""
 var buildstamp = ""
 var goversion = ""
 
-// CORSMiddleware
+// CORSMiddleware 跨域中间件
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost")

@@ -31,4 +31,3 @@ func NewRedis(c config.Redis) *redis.Client {
 	}
 	return db
 }
-
