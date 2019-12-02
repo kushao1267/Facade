@@ -2,21 +2,22 @@ package extractors
 
 import "fmt"
 import (
-	"github.com/kushao1267/Facade/facade/techniques"
-	"github.com/kushao1267/Facade/facade/utils"
 	"html"
 	"strings"
+
+	"github.com/kushao1267/Facade/facade/techniques"
+	"github.com/kushao1267/Facade/facade/utils"
 )
 
-const MarkTechnique = false
+const markTechnique = false
 
 // Extracted :Contains data extracted from a page.
 type Extracted map[string][]string
 
 var emptyData = ""
 
-// Represent print all Extracted content
-func (e Extracted) Represent() []string {
+// represent print all Extracted content
+func (e Extracted) represent() []string {
 	maxShown := 40
 	var detailStr []string
 
@@ -41,7 +42,7 @@ func (e Extracted) Represent() []string {
 	return detailStr
 }
 
-func (e Extracted) Title() string {
+func (e Extracted) title() string {
 	if val, ok := e["title"]; ok {
 		if len(val) > 0 {
 			return val[0]
@@ -50,7 +51,7 @@ func (e Extracted) Title() string {
 	return emptyData
 }
 
-func (e Extracted) Image() string {
+func (e Extracted) image() string {
 	if val, ok := e["image"]; ok {
 		if len(val) > 0 {
 			return val[0]
@@ -59,7 +60,7 @@ func (e Extracted) Image() string {
 	return emptyData
 }
 
-func (e Extracted) Video() string {
+func (e Extracted) video() string {
 	if val, ok := e["video"]; ok {
 		if len(val) > 0 {
 			return val[0]
@@ -68,7 +69,7 @@ func (e Extracted) Video() string {
 	return emptyData
 }
 
-func (e Extracted) Description() string {
+func (e Extracted) description() string {
 	if val, ok := e["description"]; ok {
 		if len(val) > 0 {
 			return val[0]
@@ -77,7 +78,7 @@ func (e Extracted) Description() string {
 	return emptyData
 }
 
-func (e Extracted) Url() string {
+func (e Extracted) url() string {
 	if val, ok := e["url"]; ok {
 		if len(val) > 0 {
 			return val[0]
@@ -86,7 +87,7 @@ func (e Extracted) Url() string {
 	return emptyData
 }
 
-func (e Extracted) Feed() string {
+func (e Extracted) feed() string {
 	if val, ok := e["feed"]; ok {
 		if len(val) > 0 {
 			return val[0]
@@ -95,7 +96,7 @@ func (e Extracted) Feed() string {
 	return emptyData
 }
 
-// Extractor :Extracts title, image and description from an HTML document.
+// Extractor Extracts title, image and description from an HTML document.
 type Extractor struct {
 	urlTypes    []string
 	textTypes   []string
@@ -103,6 +104,7 @@ type Extractor struct {
 	techniques  []techniques.Technique
 }
 
+// NewExtractor new an Extractor
 func NewExtractor(strictTypes bool, techniques ...techniques.Technique) Extractor {
 	d := Extractor{
 		[]string{"images", "urls", "feeds", "videos"},
@@ -133,7 +135,7 @@ func (d Extractor) cleanUpText(value, mark string) string {
 	// 去掉非utf-8字符
 	text = utils.ValidUTF8(text)
 
-	//// 长度限制
+	// 长度限制
 	runeText := []rune(text)
 	if len(runeText) > 125 {
 		runeText = append(runeText[:125], []rune("...")...)
@@ -147,14 +149,14 @@ func (d Extractor) cleanUpText(value, mark string) string {
 }
 
 // Transform relative URLs into absolute URLs if possible.
-func (d Extractor) cleanUpUrl(valueUrl, sourceUrl, mark string) string {
-	netloc, _ := utils.GetHostName(valueUrl)
+func (d Extractor) cleanUpURL(valueURL, sourceURL, mark string) string {
+	netloc, _ := utils.GetHostName(valueURL)
 
 	var url string
-	if netloc != "" || sourceUrl == "" {
-		url = valueUrl
+	if netloc != "" || sourceURL == "" {
+		url = valueURL
 	} else {
-		url = utils.UrlJoin(sourceUrl, valueUrl)
+		url = utils.URLJoin(sourceURL, valueURL)
 	}
 
 	if strings.HasPrefix(url, "//") {
@@ -168,11 +170,11 @@ func (d Extractor) cleanUpUrl(valueUrl, sourceUrl, mark string) string {
 }
 
 // Allows standardizing extracted contents, at this time:
-func (d Extractor) cleanUp(results techniques.DirtyExtracted, technique techniques.Technique, sourceUrl string) Extracted {
+func (d Extractor) cleanUp(results techniques.DirtyExtracted, technique techniques.Technique, sourceURL string) Extracted {
 	cleanedResults := Extracted{}
 
 	var mark string
-	if MarkTechnique {
+	if markTechnique {
 		mark = "#" + technique.GetName() // 接口无法定义字段，只能通过method的方式来set和get
 	} else {
 		mark = ""
@@ -189,8 +191,8 @@ func (d Extractor) cleanUp(results techniques.DirtyExtracted, technique techniqu
 			}
 		} else if utils.StringInSlice(dataType, d.urlTypes) {
 			for _, dataValue := range dataValues {
-				cleanedUrl := d.cleanUpUrl(dataValue, sourceUrl, mark)
-				cleanedResults[dataType] = append(cleanedResults[dataType], cleanedUrl)
+				cleanedURL := d.cleanUpURL(dataValue, sourceURL, mark)
+				cleanedResults[dataType] = append(cleanedResults[dataType], cleanedURL)
 			}
 		} else if d.strictTypes {
 			continue
@@ -201,14 +203,14 @@ func (d Extractor) cleanUp(results techniques.DirtyExtracted, technique techniqu
 	return cleanedResults
 }
 
-// Extracts contents from an HTML document.
-func (d Extractor) Extract(html, sourceUrl string) Extracted {
+// Extract contents from an HTML document.
+func (d Extractor) Extract(html, sourceURL string) Extracted {
 	var extracted = Extracted{}
 
 	for _, technique := range d.techniques {
 
 		techniqueExtracted := d.runTechnique(technique, html)
-		techniqueCleaned := d.cleanUp(techniqueExtracted, technique, sourceUrl)
+		techniqueCleaned := d.cleanUp(techniqueExtracted, technique, sourceURL)
 
 		for dataType, dataValues := range techniqueCleaned {
 			var uniqueDataValues []string

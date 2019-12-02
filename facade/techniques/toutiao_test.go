@@ -1,14 +1,15 @@
 package techniques
 
 import (
-	"github.com/kushao1267/Facade/facade/utils"
 	"testing"
+
+	"github.com/kushao1267/Facade/facade/utils"
 )
 
 func TestToutiaoTechnique_Extract(t *testing.T) {
 	var technique ToutiaoTechnique
 
-	_, html := utils.GetHtml("https://www.toutiao.com/a6673091667941130756/")
+	html, _ := utils.GetHtml("https://www.toutiao.com/a6673091667941130756/")
 
 	extracted := technique.Extract(html)
 	allEmpty := true

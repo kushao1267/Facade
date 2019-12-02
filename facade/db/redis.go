@@ -9,14 +9,16 @@ import (
 	"github.com/mgutz/ansi"
 )
 
+// RedisDB ...
 var RedisDB *redis.Client
 
-// See use: https://github.com/go-redis/redis/blob/master/example_test.go
+// Init See use: https://github.com/go-redis/redis/blob/master/example_test.go
 func Init() {
 	// 初始化redis
 	RedisDB = NewRedis(config.AllConf.Redis)
 }
 
+// NewRedis 新建redis客户端
 func NewRedis(c config.Redis) *redis.Client {
 	db := redis.NewClient(&redis.Options{
 		Addr:        c.Addr,

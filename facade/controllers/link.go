@@ -15,10 +15,13 @@ import (
 )
 
 const (
-	FailCode    = "0" // 失败状态码
+	// FailCode 失败状态码
+	FailCode = "0"
+	// SuccessCode 成功状态码
 	SuccessCode = "1" // 成功状态码
 )
 
+// LinkController ...
 type LinkController struct{}
 type returnData map[string]string
 
@@ -33,7 +36,7 @@ func (ctrl LinkController) Del(c *gin.Context) {
 		})
 		return
 	}
-	services.LinkPreviewService.Delete(linkForm.Url)
+	services.LinkPreviewService.Delete(linkForm.URL)
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": SuccessCode,
@@ -42,7 +45,7 @@ func (ctrl LinkController) Del(c *gin.Context) {
 	return
 }
 
-// Preview: link preview API
+// Preview link preview API
 func (ctrl LinkController) Preview(c *gin.Context) {
 	var linkForm forms.LinkForm
 	if c.ShouldBind(&linkForm) != nil {
@@ -53,7 +56,7 @@ func (ctrl LinkController) Preview(c *gin.Context) {
 		})
 		return
 	}
-	url := linkForm.Url
+	url := linkForm.URL
 
 	if !strings.HasPrefix(url, "https") && !strings.HasPrefix(url, "http") {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -97,7 +100,7 @@ func (ctrl LinkController) Preview(c *gin.Context) {
 				techniques.SemanticTagsTechnique{"SemanticTagsTechnique"},
 			)
 		}
-		err, html := utils.GetHtml(url)
+		html, err := utils.GetHtml(url)
 		if err != nil {
 			c.JSON(http.StatusOK, gin.H{
 				"code": FailCode,

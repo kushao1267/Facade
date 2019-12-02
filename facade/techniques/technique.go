@@ -5,25 +5,32 @@ import (
 )
 
 var (
+	emptyList = []string{}
+	// EmptyString empty string
 	EmptyString = ""
-	EmptyList   = []string{}
-	// extracted field
-	TitlesField       = "titles"
+	// TitlesField titles field
+	TitlesField = "titles"
+	// DescriptionsField ...
 	DescriptionsField = "descriptions"
-	ImagesField       = "images"
-	UrlsField         = "urls"
-	VideosField       = "videos"
-	FeedsField        = "feeds"
+	// ImagesField ...
+	ImagesField = "images"
+	// UrlsField ...
+	UrlsField = "urls"
+	// VideosField ...
+	VideosField = "videos"
+	// FeedsField ...
+	FeedsField = "feeds"
 )
 
+// GetEmptyDirtyExtracted get empty extracted
 func GetEmptyDirtyExtracted() DirtyExtracted {
 	return DirtyExtracted{
-		TitlesField:       EmptyList,
-		DescriptionsField: EmptyList,
-		ImagesField:       EmptyList,
-		UrlsField:         EmptyList,
-		VideosField:       EmptyList,
-		FeedsField:        EmptyList,
+		TitlesField:       emptyList,
+		DescriptionsField: emptyList,
+		ImagesField:       emptyList,
+		UrlsField:         emptyList,
+		VideosField:       emptyList,
+		FeedsField:        emptyList,
 	}
 }
 

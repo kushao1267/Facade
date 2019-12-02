@@ -12,7 +12,7 @@ func TestHeadTagsTechnique_Extract(t *testing.T) {
 	 		 <meta name="author" content="Will Larson" />
 	 		 <meta name="description" content="Will Larson&#39;s blog about programming and other things." />
 	 		 <meta name="keywords" content="Blog Will Larson Programming Life" />
-	 		 <link rel="alternate" type="application/rss+xml" title="Page Feed" href="/feeds/" />
+	 		 <link rel="alternate" type="application/rss+xml" title="Page feed" href="/feeds/" />
 	 		 <link rel="canonical" href="http://lethain.com/digg-v4-architecture-process/">
 	 		 <title>Digg v4&#39;s Architecture and Development Processes - Irrational Exuberance</title>
 	 		 </head>`
@@ -65,7 +65,7 @@ func TestSemanticTagsTechnique_Extract(t *testing.T) {
 	 		 <meta name="author" content="Will Larson" />
 	 		 <meta name="description" content="Will Larson&#39;s blog about programming and other things." />
 	 		 <meta name="keywords" content="Blog Will Larson Programming Life" />
-	 		 <link rel="alternate" type="application/rss+xml" title="Page Feed" href="/feeds/" />
+	 		 <link rel="alternate" type="application/rss+xml" title="Page feed" href="/feeds/" />
 	 		 <link rel="canonical" href="http://lethain.com/digg-v4-architecture-process/">
 	 		 <title>Digg v4&#39;s Architecture and Development Processes - Irrational Exuberance</title>
 	 		 <h1 >H11</h1>

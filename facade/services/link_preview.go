@@ -2,18 +2,19 @@ package services
 
 import (
 	"errors"
+	"log"
+	"time"
+
 	"github.com/kushao1267/Facade/facade/config"
 	"github.com/kushao1267/Facade/facade/db"
 	"github.com/kushao1267/Facade/facade/utils"
-	"log"
-	"time"
 )
 
 // LinkPreview store field
-//Url         string
-//Title       string
-//Description string
-//Image       string
+//url         string
+//title       string
+//description string
+//image       string
 //ImageStyle  string
 //ImageHeight string
 //ImageWidth  string

@@ -1,9 +1,10 @@
 package techniques
 
 import (
+	"strings"
+
 	"github.com/PuerkitoBio/goquery"
 	"github.com/kushao1267/Facade/facade/utils"
-	"strings"
 )
 
 // WeiboArticleTechnique ...

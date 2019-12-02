@@ -7,6 +7,7 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
+// Redis redis config
 type Redis struct {
 	Addr        string
 	Password    string
@@ -17,6 +18,7 @@ type Redis struct {
 	Expire time.Duration
 }
 
+// Config all config struct define
 type Config struct {
 	Title     string
 	Redis     Redis  `toml:"redis"`
@@ -24,6 +26,7 @@ type Config struct {
 	ReturnMap map[string]DefaultItem
 }
 
+// DefaultItem ...
 type DefaultItem struct {
 	Title        string
 	Image        string

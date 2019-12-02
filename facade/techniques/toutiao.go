@@ -1,9 +1,10 @@
 package techniques
 
 import (
+	"strings"
+
 	"github.com/PuerkitoBio/goquery"
 	"github.com/kushao1267/Facade/facade/utils"
-	"strings"
 )
 
 // ToutiaoTechnique ...
@@ -13,10 +14,12 @@ func (t ToutiaoTechnique) setName(name string) {
 	t.Name = name
 }
 
+// GetName get technique name
 func (t ToutiaoTechnique) GetName() string {
 	return t.Name
 }
 
+// Extract ...
 func (t ToutiaoTechnique) Extract(html string) DirtyExtracted {
 	extracted := GetEmptyDirtyExtracted()
 	t.setName("ToutiaoTechnique")

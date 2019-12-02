@@ -15,7 +15,7 @@ func StringInSlice(target string, list []string) bool {
 	return false
 }
 
-// remove duplicates
+// RemoveDuplicateString remove duplicates
 func RemoveDuplicateString(intSlice []string) []string {
 	keys := make(map[string]bool)
 	list := []string{}
@@ -80,6 +80,7 @@ func Domain(url string) string {
 	return "Universal"
 }
 
+// ValidUTF8 valid utf-8 string
 func ValidUTF8(s string) string {
 	if !utf8.ValidString(s) {
 		v := make([]rune, 0, len(s))

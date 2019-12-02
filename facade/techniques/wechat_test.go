@@ -1,14 +1,15 @@
 package techniques
 
 import (
-	"github.com/kushao1267/Facade/facade/utils"
 	"testing"
+
+	"github.com/kushao1267/Facade/facade/utils"
 )
 
 func TestWeChatTechnique_Extract(t *testing.T) {
 	var technique WeChatTechnique
 
-	_, html := utils.GetHtml("https://mp.weixin.qq.com/s/VRzeIxFO_sHTOHAyZRX7xw")
+	html, _ := utils.GetHtml("https://mp.weixin.qq.com/s/VRzeIxFO_sHTOHAyZRX7xw")
 
 	extracted := technique.Extract(html)
 	allEmpty := true

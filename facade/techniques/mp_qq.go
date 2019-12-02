@@ -4,17 +4,19 @@ import (
 	"github.com/kushao1267/Facade/facade/utils"
 )
 
-// QQOMTechnique ...
+// QQMPTechnique ...
 type QQMPTechnique BaseTechnique
 
 func (t QQMPTechnique) setName(name string) {
 	t.Name = name
 }
 
+// GetName ...
 func (t QQMPTechnique) GetName() string {
 	return t.Name
 }
 
+// Extract ...
 func (t QQMPTechnique) Extract(html string) DirtyExtracted {
 	extracted := GetEmptyDirtyExtracted()
 	t.setName("QQMPTechnique")

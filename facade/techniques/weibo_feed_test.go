@@ -1,14 +1,15 @@
 package techniques
 
 import (
-	"github.com/kushao1267/Facade/facade/utils"
 	"testing"
+
+	"github.com/kushao1267/Facade/facade/utils"
 )
 
 func TestWeiboTechnique_Extract(t *testing.T) {
 	var technique WeiboTechnique
 
-	_, html := utils.GetHtml("https://m.weibo.cn/5187664653/4354456894352205")
+	html, _ := utils.GetHtml("https://m.weibo.cn/5187664653/4354456894352205")
 
 	extracted := technique.Extract(html)
 	allEmpty := true

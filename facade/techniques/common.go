@@ -1,10 +1,12 @@
 package techniques
 
 import (
-	"github.com/PuerkitoBio/goquery"
 	"strings"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
+// BaseTechnique ...
 type BaseTechnique struct {
 	Name string
 }
@@ -23,15 +25,15 @@ func (t BaseTechnique) Extract(html string) DirtyExtracted {
 	return GetEmptyDirtyExtracted()
 }
 
-// Extract info from standard HTML metatags like title
+// HeadTagsTechnique Extract info from standard HTML metatags like title
 // This is usually a last-resort, low quality, but reliable parsing mechanism.
-// HeadTagsTechnique
 type HeadTagsTechnique BaseTechnique
 
 func (t HeadTagsTechnique) setName(name string) {
 	t.Name = name
 }
 
+// GetName ...
 func (t HeadTagsTechnique) GetName() string {
 	return t.Name
 }
@@ -99,11 +101,12 @@ func (t HTML5SemanticTagsTechnique) setName(name string) {
 	t.Name = name
 }
 
+// GetName ...
 func (t HTML5SemanticTagsTechnique) GetName() string {
 	return t.Name
 }
 
-// The HTML5 `article` tag, and also the `video` tag give us some useful
+// Extract The HTML5 `article` tag, and also the `video` tag give us some useful
 // hints for extracting page information for the sites which happen to
 // utilize these tags.
 func (t HTML5SemanticTagsTechnique) Extract(html string) DirtyExtracted {
@@ -134,18 +137,16 @@ func (t HTML5SemanticTagsTechnique) Extract(html string) DirtyExtracted {
 	return extracted
 }
 
-// This technique relies on the basic tags themselves--for example,
+// SemanticTagsTechnique This technique relies on the basic tags themselves--for example,
 // all IMG tags include images, most H1 and H2 tags include titles,
-// and P tags often include text usable as descriptions.
-//
-// This is a true last resort technique.
-// SemanticTagsTechnique
+// and P tags often include text usable as descriptions.This is a true last resort technique.
 type SemanticTagsTechnique BaseTechnique
 
 func (t SemanticTagsTechnique) setName(name string) {
 	t.Name = name
 }
 
+// GetName ...
 func (t SemanticTagsTechnique) GetName() string {
 	return t.Name
 }

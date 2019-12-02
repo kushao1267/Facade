@@ -1,20 +1,21 @@
 package utils
 
 import (
-	"github.com/levigross/grequests"
 	"image"
 	"time"
+
+	"github.com/levigross/grequests"
 )
 
 const (
 	requestImgTimeout = 4 * time.Second
 	// ImageHeightRule 图片高度限制
-	ImageHeightRule   = 170
+	ImageHeightRule = 170
 	// ImageWidthRule 图片宽度限制
-	ImageWidthRule    = 340
+	ImageWidthRule = 340
 )
 
-// Image 图片类，常用属性
+// image 图片类，常用属性
 type Image struct {
 	url    string
 	height int

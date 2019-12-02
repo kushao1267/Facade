@@ -2,17 +2,18 @@ package utils
 
 import (
 	"encoding/json"
-	"github.com/denisbrodbeck/striphtmltags"
-	"github.com/levigross/grequests"
-	"github.com/mgutz/ansi"
 	"log"
 	"net/url"
 	"path"
 	"time"
+
+	"github.com/denisbrodbeck/striphtmltags"
+	"github.com/levigross/grequests"
+	"github.com/mgutz/ansi"
 )
 
 const (
-	requestUrlTimeout = 5
+	requestURLTimeout = 5
 	userAgent         = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15"
 )
 
@@ -31,38 +32,38 @@ func GetHostName(s string) (string, error) {
 	return u.Host, nil
 }
 
-// UrlJoin join url
-func UrlJoin(source, target string) string {
+// URLJoin join url
+func URLJoin(source, target string) string {
 	return path.Join(source, target)
 }
 
-// GetJson ...
-func GetJson(url string, v interface{}) {
+// GetJSON ...
+func GetJSON(url string, v interface{}) {
 	resp, err := grequests.Get(url, &grequests.RequestOptions{
 		RequestTimeout: requestImgTimeout,
 		UserAgent:      userAgent,
 	})
 	if err != nil {
-		log.Println(ansi.Color("[GetJson]:", "red"), err)
+		log.Println(ansi.Color("[GetJSON]:", "red"), err)
 	}
 	if err := json.Unmarshal(resp.Bytes(), &v); err != nil {
-		log.Println(ansi.Color("[GetJson]:", "red"), err)
+		log.Println(ansi.Color("[GetJSON]:", "red"), err)
 	}
 }
 
 // GetHtml ...
-func GetHtml(url string) (error, string) {
+func GetHtml(url string) (string, error) {
 	resp, err := grequests.Get(url, &grequests.RequestOptions{
-		RequestTimeout: requestUrlTimeout * time.Second,
+		RequestTimeout: requestURLTimeout * time.Second,
 
 		UserAgent: userAgent,
 	})
 	if err != nil {
 		log.Println(ansi.Color("[GetHtml]:", "red"), err)
-		return err, ""
+		return "", err
 	}
 
-	return nil, resp.String()
+	return resp.String(), nil
 }
 
 // CleanHtmlTags 简单地处理html标签
