@@ -14,10 +14,12 @@ func (t WeiboTechnique) setName(name string) {
 	t.Name = name
 }
 
+// GetName feed article get name method
 func (t WeiboTechnique) GetName() string {
 	return t.Name
 }
 
+// Extract feed article extract method
 func (t WeiboTechnique) Extract(html string) DirtyExtracted {
 	extracted := GetEmptyDirtyExtracted()
 	t.setName("WeiboTechnique")

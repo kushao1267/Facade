@@ -11,19 +11,20 @@ import (
 )
 
 // LinkPreview store field
-//url         string
-//title       string
-//description string
-//image       string
-//ImageStyle  string
-//ImageHeight string
-//ImageWidth  string
+// url         string
+// title       string
+// description string
+// image       string
+// ImageStyle  string
+// ImageHeight string
+// ImageWidth  string
 type LinkPreview struct{}
 
-// LinkPreviewService: 链接预览缓存服务
+// LinkPreviewService 链接预览缓存服务
 var LinkPreviewService = new(LinkPreview)
 
-func (l LinkPreview) GetFiels() []string {
+// GetFields 获取preview的所有字段
+func (l LinkPreview) GetFields() []string {
 	return []string{"title", "description", "image"}
 }
 
@@ -34,26 +35,26 @@ func (l LinkPreview) GetKey(url string) string {
 }
 
 // GetValues get link preview cache
-func (l LinkPreview) GetValues(url string) (error, []string) {
+func (l LinkPreview) GetValues(url string) ([]string, error) {
 	key := l.GetKey(url)
-	fields := l.GetFiels()
+	fields := l.GetFields()
 	s := make([]string, len(fields))
 	var empty []string
 
 	val, err := db.RedisDB.HMGet(key, fields...).Result()
 
 	if err != nil {
-		return err, empty
+		return empty, err
 	}
 	for i := range fields {
 		if val[i] != nil {
 			s[i] = val[i].(string)
 		} else {
-			return errors.New("not find"), empty
+			return empty, errors.New("not find")
 		}
 	}
 
-	return nil, s
+	return s, nil
 }
 
 // SetValues set link preview cache

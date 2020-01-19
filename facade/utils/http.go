@@ -37,7 +37,7 @@ func URLJoin(source, target string) string {
 	return path.Join(source, target)
 }
 
-// GetJSON ...
+// GetJSON 获取指定url页面的json返回
 func GetJSON(url string, v interface{}) {
 	resp, err := grequests.Get(url, &grequests.RequestOptions{
 		RequestTimeout: requestImgTimeout,
@@ -51,22 +51,22 @@ func GetJSON(url string, v interface{}) {
 	}
 }
 
-// GetHtml ...
-func GetHtml(url string) (string, error) {
+// GetHTML 获取指定url页面的html
+func GetHTML(url string) (string, error) {
 	resp, err := grequests.Get(url, &grequests.RequestOptions{
 		RequestTimeout: requestURLTimeout * time.Second,
 
 		UserAgent: userAgent,
 	})
 	if err != nil {
-		log.Println(ansi.Color("[GetHtml]:", "red"), err)
+		log.Println(ansi.Color("[GetHTML]:", "red"), err)
 		return "", err
 	}
 
 	return resp.String(), nil
 }
 
-// CleanHtmlTags 简单地处理html标签
-func CleanHtmlTags(raw string) string {
+// CleanHTMLTags 简单地处理html标签
+func CleanHTMLTags(raw string) string {
 	return striphtmltags.StripTags(raw)
 }

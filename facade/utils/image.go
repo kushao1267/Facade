@@ -9,13 +9,13 @@ import (
 
 const (
 	requestImgTimeout = 4 * time.Second
-	// ImageHeightRule 图片高度限制
-	ImageHeightRule = 170
-	// ImageWidthRule 图片宽度限制
-	ImageWidthRule = 340
+	// imageHeightRule 图片高度限制
+	imageHeightRule = 170
+	// imageWidthRule 图片宽度限制
+	imageWidthRule = 340
 )
 
-// image 图片类，常用属性
+// Image 图片类，常用属性
 type Image struct {
 	url    string
 	height int
@@ -23,28 +23,31 @@ type Image struct {
 	style  int
 }
 
+// ImageEntity 图片实体
 type ImageEntity struct {
-	Url      string
+	url      string
 	height   int
 	width    int
 	ocuppies int
 }
 
-// modify this three field value is not allowed
+// Height image height
 func (i ImageEntity) Height() int {
 	return i.height
 }
 
+// Width image width
 func (i ImageEntity) Width() int {
 	return i.width
 }
 
+// Ocuppies image ocuppies
 func (i ImageEntity) Ocuppies() int {
 	return i.ocuppies
 }
 
 func (i *ImageEntity) getImage() {
-	resp, err := grequests.Get(i.Url, &grequests.RequestOptions{
+	resp, err := grequests.Get(i.url, &grequests.RequestOptions{
 		RequestTimeout: requestImgTimeout,
 	})
 
@@ -60,7 +63,7 @@ func (i *ImageEntity) getImage() {
 }
 
 func (i ImageEntity) isSatisfySize() bool {
-	if i.height > ImageHeightRule && i.width > ImageWidthRule {
+	if i.height > imageHeightRule && i.width > imageWidthRule {
 		return true
 	}
 	return false
@@ -68,6 +71,7 @@ func (i ImageEntity) isSatisfySize() bool {
 
 func (i ImageEntity) isSatisfyOccupies() {}
 
+// GetBestImage 获取最优图片
 func GetBestImage(urls []string) *Image {
 	return &Image{}
 }

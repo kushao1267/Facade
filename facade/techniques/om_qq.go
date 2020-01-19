@@ -11,12 +11,12 @@ func (t QQOMTechnique) setName(name string) {
 	t.Name = name
 }
 
-// GetName ...
+// GetName om_qq get name method
 func (t QQOMTechnique) GetName() string {
 	return t.Name
 }
 
-// Extract ...
+// Extract om_qq extract method
 func (t QQOMTechnique) Extract(html string) DirtyExtracted {
 	extracted := GetEmptyDirtyExtracted()
 	t.setName("QQOMTechnique")

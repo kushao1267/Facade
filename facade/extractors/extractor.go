@@ -130,7 +130,7 @@ func (d Extractor) cleanUpText(value, mark string) string {
 	text := strings.TrimSpace(value)
 
 	// 去除标签, 其中Unescape text是将"&lt;&gt;"这样的字符变为标签"<>"以便于去除.
-	text = utils.CleanHtmlTags(html.UnescapeString(text))
+	text = utils.CleanHTMLTags(html.UnescapeString(text))
 
 	// 去掉非utf-8字符
 	text = utils.ValidUTF8(text)

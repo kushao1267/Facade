@@ -21,6 +21,18 @@ const (
 	SuccessCode = "1" // 成功状态码
 )
 
+// NewRespData 用于构造返回结果
+func NewRespData(code, msg string, data interface{}) gin.H {
+	var resp = gin.H{
+		"code": code,
+		"msg":  msg,
+	}
+	if data != nil {
+		resp["data"] = data
+	}
+	return resp
+}
+
 // LinkController ...
 type LinkController struct{}
 type returnData map[string]string
@@ -29,19 +41,12 @@ type returnData map[string]string
 func (ctrl LinkController) Del(c *gin.Context) {
 	var linkForm forms.LinkForm
 	if c.ShouldBind(&linkForm) != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"code": FailCode,
-			"msg":  "Invalid form",
-			"form": linkForm,
-		})
+		c.JSON(http.StatusOK, NewRespData(FailCode, "Invalid form", linkForm))
 		return
 	}
 	services.LinkPreviewService.Delete(linkForm.URL)
 
-	c.JSON(http.StatusOK, gin.H{
-		"code": SuccessCode,
-		"msg":  "success",
-	})
+	c.JSON(http.StatusOK, NewRespData(SuccessCode, "success", nil))
 	return
 }
 
@@ -49,36 +54,23 @@ func (ctrl LinkController) Del(c *gin.Context) {
 func (ctrl LinkController) Preview(c *gin.Context) {
 	var linkForm forms.LinkForm
 	if c.ShouldBind(&linkForm) != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"code": FailCode,
-			"msg":  "Invalid form",
-			"form": linkForm,
-		})
+		c.JSON(http.StatusOK, NewRespData(FailCode, "Invalid form", linkForm))
 		return
 	}
 	url := linkForm.URL
 
 	if !strings.HasPrefix(url, "https") && !strings.HasPrefix(url, "http") {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code": FailCode,
-			"msg":  "fail",
-			"data": returnData{
-				"request_url": url,
-			},
-		})
+		c.JSON(http.StatusOK, NewRespData(FailCode, "fail", returnData{"request_url": url}))
+
 		return
 	}
 
 	var title, description, image string
 	// 从缓存中取结果
-	err, result := services.LinkPreviewService.GetValues(url)
+	result, err := services.LinkPreviewService.GetValues(url)
 
 	// 缓存存在
-	if err == nil {
-		title, description, image = result[0], result[1], result[2]
-		log.Println("取到缓存")
-	} else {
-		// 缓存不存在
+	if err != nil { // 缓存不存在
 
 		host, err := utils.GetHostName(url)
 		tech, err1 := techniques.GetTechnique(host)
@@ -95,17 +87,15 @@ func (ctrl LinkController) Preview(c *gin.Context) {
 			// 2.使用通用technique
 			extractor = extractors.NewExtractor(
 				false,
-				techniques.HeadTagsTechnique{"HeadTagsTechnique"},
-				techniques.HTML5SemanticTagsTechnique{"HTML5SemanticTagsTechnique"},
-				techniques.SemanticTagsTechnique{"SemanticTagsTechnique"},
+				techniques.HeadTagsTechnique{Name: "HeadTagsTechnique"},
+				techniques.HTML5SemanticTagsTechnique{Name: "HTML5SemanticTagsTechnique"},
+				techniques.SemanticTagsTechnique{Name: "SemanticTagsTechnique"},
 			)
 		}
-		html, err := utils.GetHtml(url)
+		html, err := utils.GetHTML(url)
 		if err != nil {
-			c.JSON(http.StatusOK, gin.H{
-				"code": FailCode,
-				"msg":  "请求页面错误," + err.Error(),
-			})
+			c.JSON(http.StatusOK, NewRespData(FailCode, "请求页面错误,"+err.Error(), nil))
+
 			return
 		}
 		extracted := extractor.Extract(html, url)
@@ -121,15 +111,15 @@ func (ctrl LinkController) Preview(c *gin.Context) {
 				"description": description,
 				"image":       image,
 			})
+	} else {
+		title, description, image = result[0], result[1], result[2]
+		log.Println("取到缓存")
 	}
+
 	// 返回
-	c.JSON(http.StatusOK, gin.H{
-		"code": SuccessCode,
-		"msg":  "success",
-		"data": returnData{
-			"title":       title,
-			"description": description,
-			"image":       image,
-		},
-	})
+	c.JSON(http.StatusOK, NewRespData(SuccessCode, "success", returnData{
+		"title":       title,
+		"description": description,
+		"image":       image,
+	}))
 }

@@ -7,17 +7,19 @@ import (
 	"github.com/kushao1267/Facade/facade/utils"
 )
 
-// WeiboTechnique ...
+// WeChatTechnique ...
 type WeChatTechnique BaseTechnique
 
 func (t WeChatTechnique) setName(name string) {
 	t.Name = name
 }
 
+// GetName wechat get name method
 func (t WeChatTechnique) GetName() string {
 	return t.Name
 }
 
+// Extract wechat extract method
 func (t WeChatTechnique) Extract(html string) DirtyExtracted {
 	extracted := GetEmptyDirtyExtracted()
 	t.setName("WeChatTechnique")
